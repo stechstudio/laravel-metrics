@@ -1,0 +1,34 @@
+<?php
+namespace STS\EventMetrics;
+
+/**
+ * Interface ShouldReportMetric
+ * @package STS\EventMetrics
+ */
+interface ShouldReportMetric
+{
+    /**
+     * @return string
+     */
+    public function getMetricName();
+
+    /**
+     * @return mixed
+     */
+    public function getMetricValue();
+
+    /**
+     * @return array
+     */
+    public function getMetricTags();
+
+    /**
+     * @return array
+     */
+    public function getMetricFields();
+
+    /**
+     * @return mixed
+     */
+    public function getMetricTimestamp();
+}
