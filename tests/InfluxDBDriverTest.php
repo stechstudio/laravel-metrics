@@ -16,13 +16,10 @@ class InfluxDBDriverTest extends TestCase
             'udp_port' => 456
         ]);
 
-        /** @var InfluxDB $client */
-        $client = app(MetricsManager::class)->driver();
-
         // Since we provided a UDP port, that will be our write client
         $this->assertInstanceOf(
             \InfluxDB\Driver\UDP::class,
-            $client->getWriteConnection()->getClient()->getDriver()
+            Metrics::getWriteConnection()->getClient()->getDriver()
         );
     }
 
@@ -37,15 +34,26 @@ class InfluxDBDriverTest extends TestCase
             'tcp_port' => 123
         ]);
 
-        /** @var InfluxDB $client */
-        $client = app(MetricsManager::class)->driver();
-
         // With UDP port, we will get a TCP client
         $this->assertInstanceOf(
             \InfluxDB\Driver\Guzzle::class,
-            $client->getWriteConnection()->getClient()->getDriver()
+            Metrics::getWriteConnection()->getClient()->getDriver()
         );
     }
 
+    public function testNanoSecondTimestamp()
+    {
+        app('config')->set('metrics.default', 'influxdb');
+        app('config')->set('metrics.backends.influxdb', [
+            'username' => 'foo',
+            'password' => 'bar',
+            'host' => 'localhost',
+            'database' => 'baz',
+            'tcp_port' => 123
+        ]);
 
+        $this->assertEquals(1508713728000000000, Metrics::getNanoSecondTimestamp(1508713728000000000));
+        $this->assertEquals(1508713728000000000, Metrics::getNanoSecondTimestamp(1508713728));
+        $this->assertEquals(1508713728000000000, Metrics::getNanoSecondTimestamp(new \DateTime('@1508713728')));
+    }
 }

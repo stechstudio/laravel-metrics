@@ -1,12 +1,19 @@
 <?php
 namespace STS\Metrics;
 
+use STS\Metrics\Contracts\HandlesMetrics;
+use Metrics;
+
 /**
  * Class Metric
  * @package STS\Metrics
  */
 class Metric
 {
+    /**
+     * @var HandlesMetrics
+     */
+    protected $creator;
     /**
      * @var
      */
@@ -32,10 +39,12 @@ class Metric
      * Metric constructor.
      *
      * @param null $name
+     * @param null $creator
      */
-    function __construct($name = null)
+    function __construct($name = null, $creator = null)
     {
-        $this->setName($name);
+        $this->name = $name;
+        $this->creator = $creator;
     }
 
     /**
@@ -91,11 +100,20 @@ class Metric
      *
      * @return $this
      */
-    public function setTags($tags)
+    public function setTags(array $tags)
     {
         $this->tags = $tags;
 
         return $this;
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     */
+    public function addTag($key, $value)
+    {
+        $this->tags[$key] = $value;
     }
 
     /**
@@ -111,11 +129,20 @@ class Metric
      *
      * @return $this
      */
-    public function setExtra($extra)
+    public function setExtra(array $extra)
     {
         $this->extra = $extra;
 
         return $this;
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     */
+    public function addExtra($key, $value)
+    {
+        $this->extra[$key] = $value;
     }
 
     /**
@@ -136,5 +163,17 @@ class Metric
         $this->timestamp = $timestamp;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function add()
+    {
+        if($this->creator) {
+            return $this->creator->add($this);
+        }
+
+        return Metrics::add($this);
     }
 }

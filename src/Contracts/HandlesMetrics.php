@@ -3,8 +3,15 @@ namespace STS\Metrics\Contracts;
 
 use STS\Metrics\Metric;
 
-interface HandlesEvents
+interface HandlesMetrics
 {
+    /**
+     * @param $name
+     *
+     * @return Metric
+     */
+    public function create($name);
+
     /**
      * @param Metric $metric
      *
@@ -16,4 +23,9 @@ interface HandlesEvents
      * @return mixed
      */
     public function flush();
+
+    /**
+     * @return array
+     */
+    public function getMetrics();
 }

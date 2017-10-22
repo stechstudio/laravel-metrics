@@ -6,15 +6,14 @@ use InfluxDB\Client;
 use InfluxDB\Database;
 use InfluxDB\Driver\UDP;
 use InfluxDB\Point;
-use STS\Metrics\Contracts\HandlesEvents;
-use STS\Metrics\Contracts\ShouldReportMetric;
+use STS\Metrics\Contracts\HandlesMetrics;
 use STS\Metrics\Metric;
 
 /**
  * Class InfluxDB
  * @package STS\EventMetrics\Drivers
  */
-class InfluxDB implements HandlesEvents
+class InfluxDB implements HandlesMetrics
 {
     /**
      * @var string
@@ -60,6 +59,10 @@ class InfluxDB implements HandlesEvents
      * @var array
      */
     protected $defaultFields = [];
+    /**
+     * @var array
+     */
+    protected $metrics = [];
 
     /**
      * InfluxDB constructor.
@@ -82,6 +85,16 @@ class InfluxDB implements HandlesEvents
         if($tcpPort) {
             $this->tcpPort = $tcpPort;
         }
+    }
+
+    /**
+     * @param $name
+     *
+     * @return Metric
+     */
+    public function create($name)
+    {
+        return new Metric($name, $this);
     }
 
     /**
@@ -133,6 +146,10 @@ class InfluxDB implements HandlesEvents
      */
     public function getNanoSecondTimestamp($timestamp = null)
     {
+        if($timestamp instanceof \DateTime) {
+            return $timestamp->getTimestamp() * 1000000000;
+        }
+
         if (strlen($timestamp) == 19) {
             // Looks like it is already nanosecond precise!
             return $timestamp;
@@ -173,6 +190,14 @@ class InfluxDB implements HandlesEvents
     public function getPoints()
     {
         return $this->points;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMetrics()
+    {
+        return $this->metrics;
     }
 
     /**
