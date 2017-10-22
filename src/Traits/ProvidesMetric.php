@@ -1,5 +1,5 @@
 <?php
-namespace STS\EventMetrics\Traits;
+namespace STS\Metrics\Traits;
 
 trait ProvidesMetric
 {

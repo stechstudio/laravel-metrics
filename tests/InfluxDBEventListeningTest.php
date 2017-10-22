@@ -55,12 +55,12 @@ class InfluxDBEventListeningTest extends TestCase
     }
 }
 
-class BasicEvent implements \STS\EventMetrics\Contracts\ShouldReportMetric {
-    use STS\EventMetrics\Traits\ProvidesMetric;
+class BasicEvent implements \STS\Metrics\Contracts\ShouldReportMetric {
+    use STS\Metrics\Traits\ProvidesMetric;
 }
 
-class EventWithAttributes implements \STS\EventMetrics\Contracts\ShouldReportMetric {
-    use STS\EventMetrics\Traits\ProvidesMetric;
+class EventWithAttributes implements \STS\Metrics\Contracts\ShouldReportMetric {
+    use STS\Metrics\Traits\ProvidesMetric;
 
     protected $metricName = "order_placed";
     protected $metricValue = 5;
@@ -69,8 +69,8 @@ class EventWithAttributes implements \STS\EventMetrics\Contracts\ShouldReportMet
     protected $metricTimestamp = 1508701523;
 }
 
-class EventWithGetters implements \STS\EventMetrics\Contracts\ShouldReportMetric {
-    use STS\EventMetrics\Traits\ProvidesMetric;
+class EventWithGetters implements \STS\Metrics\Contracts\ShouldReportMetric {
+    use STS\Metrics\Traits\ProvidesMetric;
 
     public function getMetricName()
     {

@@ -1,8 +1,8 @@
 <?php
-namespace STS\EventMetrics;
+namespace STS\Metrics;
 
 use Illuminate\Support\Manager;
-use STS\EventMetrics\Drivers\InfluxDB;
+use STS\Metrics\Drivers\InfluxDB;
 
 /**
  * Class MetricsManager

@@ -1,9 +1,9 @@
 <?php
 
-namespace STS\EventMetrics;
+namespace STS\Metrics;
 
 use Illuminate\Support\ServiceProvider;
-use STS\EventMetrics\Contracts\ShouldReportMetric;
+use STS\Metrics\Contracts\ShouldReportMetric;
 
 /**
  * Class MetricsServiceProvider

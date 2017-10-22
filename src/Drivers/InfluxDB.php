@@ -1,13 +1,13 @@
 <?php
 
-namespace STS\EventMetrics\Drivers;
+namespace STS\Metrics\Drivers;
 
 use InfluxDB\Client;
 use InfluxDB\Database;
 use InfluxDB\Driver\UDP;
 use InfluxDB\Point;
-use STS\EventMetrics\Contracts\HandlesEvents;
-use STS\EventMetrics\Contracts\ShouldReportMetric;
+use STS\Metrics\Contracts\HandlesEvents;
+use STS\Metrics\Contracts\ShouldReportMetric;
 
 /**
  * Class InfluxDB

@@ -3,13 +3,13 @@ class TestCase extends Orchestra\Testbench\TestCase
 {
     protected function getPackageProviders($app)
     {
-        return ['STS\EventMetrics\MetricsServiceProvider'];
+        return ['STS\Metrics\MetricsServiceProvider'];
     }
 
     protected function getPackageAliases($app)
     {
         return [
-            'Metrics' => 'STS\EventMetrics\MetricsFacade'
+            'Metrics' => 'STS\Metrics\MetricsFacade'
         ];
     }
 }

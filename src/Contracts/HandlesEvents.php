@@ -1,7 +1,5 @@
 <?php
-namespace STS\EventMetrics\Contracts;
-
-use STS\EventMetrics\Contracts\ShouldReportMetric;
+namespace STS\Metrics\Contracts;
 
 interface HandlesEvents
 {

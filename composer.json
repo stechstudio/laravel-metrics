@@ -23,7 +23,7 @@
     },
     "autoload": {
         "psr-4": {
-            "STS\\EventMetrics\\": "src"
+            "STS\\Metrics\\": "src"
         }
     },
     "autoload-dev": {
@@ -35,10 +35,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "STS\\EventMetrics\\MetricsServiceProvider"
+                "STS\\Metrics\\MetricsServiceProvider"
             ],
             "aliases": {
-                "Metrics": "STS\\EventMetrics\\MetricsFacade"
+                "Metrics": "STS\\Metrics\\MetricsFacade"
             }
         }
     }

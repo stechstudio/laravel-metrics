@@ -1,6 +1,6 @@
 <?php
-use STS\EventMetrics\Drivers\InfluxDB;
-use STS\EventMetrics\MetricsManager;
+use STS\Metrics\Drivers\InfluxDB;
+use STS\Metrics\MetricsManager;
 
 class InfluxDBDriverTest extends TestCase
 {

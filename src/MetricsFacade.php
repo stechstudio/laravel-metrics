@@ -1,11 +1,13 @@
 <?php
-namespace STS\EventMetrics;
+namespace STS\Metrics;
+
+use Illuminate\Support\Facades\Facade;
 
 /**
  * Class MetricsFacade
  * @package STS\EventMetrics
  */
-class MetricsFacade extends \Illuminate\Support\Facades\Facade
+class MetricsFacade extends Facade
 {
     /**
      * @return string
