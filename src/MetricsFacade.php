@@ -2,16 +2,16 @@
 namespace STS\EventMetrics;
 
 /**
- * Class Facade
+ * Class MetricsFacade
  * @package STS\EventMetrics
  */
-class Facade extends \Illuminate\Support\Facades\Facade
+class MetricsFacade extends \Illuminate\Support\Facades\Facade
 {
     /**
      * @return string
      */
     protected static function getFacadeAccessor()
     {
-        return InfluxDB::class;
+        return MetricsManager::class;
     }
 }

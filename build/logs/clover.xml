@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1508709711">
+  <project timestamp="1508709711">
+    <file name="/Users/josephszobody/dev/laravel-event-metrics/src/Contracts/HandlesEvents.php">
+      <metrics loc="18" ncloc="10" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="/Users/josephszobody/dev/laravel-event-metrics/src/Contracts/ShouldReportMetric.php">
+      <metrics loc="33" ncloc="14" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <package name="STS\EventMetrics\Drivers">
+      <file name="/Users/josephszobody/dev/laravel-event-metrics/src/Drivers/InfluxDB.php">
+        <class name="InfluxDB" namespace="STS\EventMetrics\Drivers" fullPackage="STS" package="STS">
+          <metrics complexity="20" methods="12" coveredmethods="9" conditionals="0" coveredconditionals="0" statements="57" coveredstatements="49" elements="69" coveredelements="58"/>
+        </class>
+        <line num="73" type="method" name="__construct" visibility="public" complexity="2" crap="2" count="5"/>
+        <line num="75" type="stmt" count="5"/>
+        <line num="76" type="stmt" count="5"/>
+        <line num="77" type="stmt" count="5"/>
+        <line num="78" type="stmt" count="5"/>
+        <line num="79" type="stmt" count="5"/>
+        <line num="81" type="stmt" count="5"/>
+        <line num="82" type="stmt" count="2"/>
+        <line num="83" type="stmt" count="2"/>
+        <line num="84" type="stmt" count="5"/>
+        <line num="91" type="method" name="event" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="93" type="stmt" count="3"/>
+        <line num="94" type="stmt" count="3"/>
+        <line num="95" type="stmt" count="3"/>
+        <line num="96" type="stmt" count="3"/>
+        <line num="97" type="stmt" count="3"/>
+        <line num="98" type="stmt" count="3"/>
+        <line num="99" type="stmt" count="3"/>
+        <line num="113" type="method" name="point" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="115" type="stmt" count="3"/>
+        <line num="116" type="stmt" count="3"/>
+        <line num="117" type="stmt" count="3"/>
+        <line num="118" type="stmt" count="3"/>
+        <line num="119" type="stmt" count="3"/>
+        <line num="120" type="stmt" count="3"/>
+        <line num="121" type="stmt" count="3"/>
+        <line num="123" type="stmt" count="3"/>
+        <line num="133" type="method" name="getNanoSecondTimestamp" visibility="public" complexity="4" crap="4.37" count="3"/>
+        <line num="135" type="stmt" count="3"/>
+        <line num="137" type="stmt" count="0"/>
+        <line num="140" type="stmt" count="3"/>
+        <line num="142" type="stmt" count="2"/>
+        <line num="145" type="stmt" count="1"/>
+        <line num="147" type="stmt" count="0"/>
+        <line num="151" type="stmt" count="1"/>
+        <line num="157" type="method" name="flush" visibility="public" complexity="2" crap="6" count="0"/>
+        <line num="159" type="stmt" count="0"/>
+        <line num="160" type="stmt" count="0"/>
+        <line num="163" type="stmt" count="0"/>
+        <line num="164" type="stmt" count="0"/>
+        <line num="166" type="stmt" count="0"/>
+        <line num="172" type="method" name="getPoints" visibility="public" complexity="1" crap="1" count="3"/>
+        <line num="174" type="stmt" count="3"/>
+        <line num="180" type="method" name="getWriteConnection" visibility="public" complexity="2" crap="2" count="2"/>
+        <line num="182" type="stmt" count="2"/>
+        <line num="183" type="stmt" count="2"/>
+        <line num="184" type="stmt" count="2"/>
+        <line num="190" type="method" name="getTcpConnection" visibility="public" complexity="2" crap="2" count="4"/>
+        <line num="192" type="stmt" count="4"/>
+        <line num="193" type="stmt" count="4"/>
+        <line num="194" type="stmt" count="4"/>
+        <line num="195" type="stmt" count="4"/>
+        <line num="196" type="stmt" count="4"/>
+        <line num="198" type="stmt" count="4"/>
+        <line num="204" type="method" name="setTcpConnection" visibility="public" complexity="1" crap="1" count="4"/>
+        <line num="206" type="stmt" count="4"/>
+        <line num="207" type="stmt" count="4"/>
+        <line num="212" type="method" name="getUdpConnection" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="214" type="stmt" count="1"/>
+        <line num="215" type="stmt" count="1"/>
+        <line num="216" type="stmt" count="1"/>
+        <line num="217" type="stmt" count="1"/>
+        <line num="218" type="stmt" count="1"/>
+        <line num="220" type="stmt" count="1"/>
+        <line num="226" type="method" name="setUdpConnection" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="228" type="stmt" count="1"/>
+        <line num="229" type="stmt" count="1"/>
+        <line num="239" type="method" name="__call" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="241" type="stmt" count="0"/>
+        <metrics loc="242" ncloc="135" classes="1" methods="12" coveredmethods="9" conditionals="0" coveredconditionals="0" statements="57" coveredstatements="49" elements="69" coveredelements="58"/>
+      </file>
+    </package>
+    <package name="STS\EventMetrics">
+      <file name="/Users/josephszobody/dev/laravel-event-metrics/src/MetricsFacade.php">
+        <class name="MetricsFacade" namespace="STS\EventMetrics" fullPackage="STS" package="STS">
+          <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
+        </class>
+        <line num="13" type="method" name="getFacadeAccessor" visibility="protected" complexity="1" crap="1" count="3"/>
+        <line num="15" type="stmt" count="3"/>
+        <metrics loc="16" ncloc="9" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
+      </file>
+      <file name="/Users/josephszobody/dev/laravel-event-metrics/src/MetricsManager.php">
+        <class name="MetricsManager" namespace="STS\EventMetrics" fullPackage="STS" package="STS">
+          <metrics complexity="2" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="9" coveredstatements="9" elements="11" coveredelements="11"/>
+        </class>
+        <line num="16" type="method" name="getDefaultDriver" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="18" type="stmt" count="5"/>
+        <line num="24" type="method" name="createInfluxdbDriver" visibility="public" complexity="1" crap="1" count="5"/>
+        <line num="26" type="stmt" count="5"/>
+        <line num="27" type="stmt" count="5"/>
+        <line num="28" type="stmt" count="5"/>
+        <line num="29" type="stmt" count="5"/>
+        <line num="30" type="stmt" count="5"/>
+        <line num="31" type="stmt" count="5"/>
+        <line num="32" type="stmt" count="5"/>
+        <line num="33" type="stmt" count="5"/>
+        <metrics loc="34" ncloc="24" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="9" coveredstatements="9" elements="11" coveredelements="11"/>
+      </file>
+      <file name="/Users/josephszobody/dev/laravel-event-metrics/src/MetricsServiceProvider.php">
+        <class name="MetricsServiceProvider" namespace="STS\EventMetrics" fullPackage="STS" package="STS">
+          <metrics complexity="9" methods="4" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="20" coveredstatements="15" elements="24" coveredelements="16"/>
+        </class>
+        <line num="22" type="method" name="register" visibility="public" complexity="2" crap="2.15" count="5"/>
+        <line num="24" type="stmt" count="5"/>
+        <line num="27" type="stmt" count="5"/>
+        <line num="30" type="stmt" count="0"/>
+        <line num="31" type="stmt" count="0"/>
+        <line num="32" type="stmt" count="0"/>
+        <line num="33" type="stmt" count="5"/>
+        <line num="35" type="stmt" count="5"/>
+        <line num="36" type="stmt" count="5"/>
+        <line num="37" type="stmt" count="5"/>
+        <line num="42" type="method" name="boot" visibility="public" complexity="3" crap="3" count="5"/>
+        <line num="44" type="stmt" count="5"/>
+        <line num="45" type="stmt" count="5"/>
+        <line num="46" type="stmt" count="5"/>
+        <line num="48" type="method" name="anonymous function" complexity="3" crap="3.03" count="5"/>
+        <line num="49" type="stmt" count="3"/>
+        <line num="51" type="stmt" count="3"/>
+        <line num="52" type="stmt" count="0"/>
+        <line num="55" type="stmt" count="3"/>
+        <line num="56" type="stmt" count="3"/>
+        <line num="57" type="stmt" count="5"/>
+        <line num="58" type="stmt" count="5"/>
+        <line num="59" type="stmt" count="5"/>
+        <line num="64" type="method" name="provides" visibility="public" complexity="1" crap="2" count="0"/>
+        <line num="66" type="stmt" count="0"/>
+        <metrics loc="67" ncloc="51" classes="1" methods="4" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="21" coveredstatements="16" elements="25" coveredelements="17"/>
+      </file>
+    </package>
+    <package name="STS\EventMetrics\Traits">
+      <file name="/Users/josephszobody/dev/laravel-event-metrics/src/Traits/ProvidesMetric.php">
+        <class name="ProvidesMetric" namespace="STS\EventMetrics\Traits">
+          <metrics complexity="10" methods="5" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="15" elements="20" coveredelements="20"/>
+        </class>
+        <line num="9" type="method" name="getMetricName" visibility="public" complexity="2" crap="2" count="2"/>
+        <line num="11" type="stmt" count="2"/>
+        <line num="12" type="stmt" count="2"/>
+        <line num="13" type="stmt" count="2"/>
+        <line num="19" type="method" name="getMetricValue" visibility="public" complexity="2" crap="2" count="2"/>
+        <line num="21" type="stmt" count="2"/>
+        <line num="22" type="stmt" count="2"/>
+        <line num="23" type="stmt" count="2"/>
+        <line num="29" type="method" name="getMetricTags" visibility="public" complexity="2" crap="2" count="2"/>
+        <line num="31" type="stmt" count="2"/>
+        <line num="32" type="stmt" count="2"/>
+        <line num="33" type="stmt" count="2"/>
+        <line num="39" type="method" name="getMetricFields" visibility="public" complexity="2" crap="2" count="2"/>
+        <line num="41" type="stmt" count="2"/>
+        <line num="42" type="stmt" count="2"/>
+        <line num="43" type="stmt" count="2"/>
+        <line num="49" type="method" name="getMetricTimestamp" visibility="public" complexity="2" crap="2" count="2"/>
+        <line num="51" type="stmt" count="2"/>
+        <line num="52" type="stmt" count="2"/>
+        <line num="53" type="stmt" count="2"/>
+        <metrics loc="54" ncloc="39" classes="1" methods="5" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="15" coveredstatements="15" elements="20" coveredelements="20"/>
+      </file>
+    </package>
+    <metrics files="7" loc="464" ncloc="282" classes="5" methods="24" coveredmethods="18" conditionals="0" coveredconditionals="0" statements="103" coveredstatements="90" elements="127" coveredelements="108"/>
+  </project>
+</coverage>

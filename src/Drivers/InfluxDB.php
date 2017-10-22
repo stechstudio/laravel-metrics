@@ -1,17 +1,19 @@
 <?php
 
-namespace STS\EventMetrics;
+namespace STS\EventMetrics\Drivers;
 
 use InfluxDB\Client;
 use InfluxDB\Database;
 use InfluxDB\Driver\UDP;
 use InfluxDB\Point;
+use STS\EventMetrics\Contracts\HandlesEvents;
+use STS\EventMetrics\Contracts\ShouldReportMetric;
 
 /**
  * Class InfluxDB
- * @package STS\EventMetrics
+ * @package STS\EventMetrics\Drivers
  */
-class InfluxDB
+class InfluxDB implements HandlesEvents
 {
     /**
      * @var string
@@ -32,7 +34,7 @@ class InfluxDB
     /**
      * @var int
      */
-    protected $tcpPort;
+    protected $tcpPort = 8086;
     /**
      * @var int
      */
@@ -68,14 +70,33 @@ class InfluxDB
      * @param $tcpPort
      * @param $udpPort
      */
-    public function __construct($username, $password, $host, $database, $tcpPort = 8086, $udpPort = null)
+    public function __construct($username, $password, $host, $database, $tcpPort = null, $udpPort = null)
     {
         $this->username = $username;
         $this->password = $password;
         $this->host = $host;
         $this->database = $database;
-        $this->tcpPort = $tcpPort;
         $this->udpPort = $udpPort;
+
+        if($tcpPort) {
+            $this->tcpPort = $tcpPort;
+        }
+    }
+
+    /**
+     * @param ShouldReportMetric $event
+     *
+     * @return InfluxDB
+     */
+    public function event(ShouldReportMetric $event)
+    {
+        return $this->point(
+            $event->getMetricName(),
+            $event->getMetricValue(),
+            $event->getMetricTags(),
+            $event->getMetricFields(),
+            $event->getMetricTimestamp()
+        );
     }
 
     /**
@@ -89,7 +110,7 @@ class InfluxDB
      *
      * @return $this
      */
-    public function add($measurement, $value = null, array $tags = [], array $fields = [], $timestamp = null)
+    public function point($measurement, $value = null, array $tags = [], array $fields = [], $timestamp = null)
     {
         $this->points[] = new Point(
             $measurement,
@@ -143,6 +164,14 @@ class InfluxDB
         $this->points = [];
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPoints()
+    {
+        return $this->points;
     }
 
     /**

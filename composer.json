@@ -2,18 +2,6 @@
     "name": "stechstudio/laravel-event-metrics",
     "description": "Track Laravel events, send metric data to InfluxDB",
     "type": "library",
-    "require": {
-        "illuminate/support": "5.*",
-        "influxdb/influxdb-php": "^1.14"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^5.7"
-    },
-    "autoload": {
-        "psr-4": {
-            "STS\\EventMetrics\\": "src"
-        }
-    },
     "license": "MIT",
     "authors": [
         {
@@ -25,14 +13,32 @@
             "email": "bubba@stechstudio.com"
         }
     ],
+    "require": {
+        "illuminate/support": "5.*",
+        "influxdb/influxdb-php": "^1.14"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7",
+        "orchestra/testbench": "~3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "STS\\EventMetrics\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "files": [
+            "tests/TestCase.php"
+        ]
+    },
     "minimum-stability": "stable",
     "extra": {
         "laravel": {
             "providers": [
-                "STS\\EventMetrics\\EventMetricsServiceProvider"
+                "STS\\EventMetrics\\MetricsServiceProvider"
             ],
             "aliases": {
-                "InfluxDB": "STS\\EventMetrics\\Facade"
+                "Metrics": "STS\\EventMetrics\\MetricsFacade"
             }
         }
     }

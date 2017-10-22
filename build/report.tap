@@ -1,0 +1,7 @@
+TAP version 13
+ok 1 - InfluxDBDriverTest::testUdpWriteClient
+ok 2 - InfluxDBDriverTest::testTcpWriteClient
+ok 3 - InfluxDBEventListeningTest::testBasicEventMetricAdded
+ok 4 - InfluxDBEventListeningTest::testMetricWithAttributes
+ok 5 - InfluxDBEventListeningTest::testMetricWithGetters
+1..5

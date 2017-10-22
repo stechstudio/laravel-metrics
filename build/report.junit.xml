@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="EventMetrics Test Suite" tests="5" assertions="14" failures="0" errors="0" time="2.507029">
+    <testsuite name="InfluxDBDriverTest" file="/Users/josephszobody/dev/laravel-event-metrics/tests/InfluxDBDriverTest.php" tests="2" assertions="2" failures="0" errors="0" time="1.377857">
+      <testcase name="testUdpWriteClient" class="InfluxDBDriverTest" file="/Users/josephszobody/dev/laravel-event-metrics/tests/InfluxDBDriverTest.php" line="7" assertions="1" time="1.053735"/>
+      <testcase name="testTcpWriteClient" class="InfluxDBDriverTest" file="/Users/josephszobody/dev/laravel-event-metrics/tests/InfluxDBDriverTest.php" line="29" assertions="1" time="0.324122"/>
+    </testsuite>
+    <testsuite name="InfluxDBEventListeningTest" file="/Users/josephszobody/dev/laravel-event-metrics/tests/InfluxDBEventListeningTest.php" tests="3" assertions="12" failures="0" errors="0" time="1.129172">
+      <testcase name="testBasicEventMetricAdded" class="InfluxDBEventListeningTest" file="/Users/josephszobody/dev/laravel-event-metrics/tests/InfluxDBEventListeningTest.php" line="23" assertions="2" time="0.239894"/>
+      <testcase name="testMetricWithAttributes" class="InfluxDBEventListeningTest" file="/Users/josephszobody/dev/laravel-event-metrics/tests/InfluxDBEventListeningTest.php" line="31" assertions="5" time="0.252618"/>
+      <testcase name="testMetricWithGetters" class="InfluxDBEventListeningTest" file="/Users/josephszobody/dev/laravel-event-metrics/tests/InfluxDBEventListeningTest.php" line="44" assertions="5" time="0.636660"/>
+    </testsuite>
+  </testsuite>
+</testsuites>

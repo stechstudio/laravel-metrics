@@ -1,5 +1,5 @@
 <?php
-namespace STS\EventMetrics;
+namespace STS\EventMetrics\Traits;
 
 trait ProvidesMetric
 {
@@ -20,7 +20,7 @@ trait ProvidesMetric
     {
         return property_exists($this, 'metricValue')
             ? $this->metricValue
-            : 0;
+            : null;
     }
 
     /**
