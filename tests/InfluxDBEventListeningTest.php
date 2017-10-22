@@ -65,7 +65,7 @@ class EventWithAttributes implements \STS\Metrics\Contracts\ShouldReportMetric {
     protected $metricName = "order_placed";
     protected $metricValue = 5;
     protected $metricTags = ["source" => "email"];
-    protected $metricFields = ["item_count" => 10];
+    protected $metricExtra = ["item_count" => 10];
     protected $metricTimestamp = 1508701523;
 }
 
@@ -87,7 +87,7 @@ class EventWithGetters implements \STS\Metrics\Contracts\ShouldReportMetric {
         return ["admin" => false];
     }
 
-    public function getMetricFields()
+    public function getMetricExtra()
     {
         return ["company_id" => 50];
     }

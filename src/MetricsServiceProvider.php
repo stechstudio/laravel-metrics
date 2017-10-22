@@ -48,13 +48,11 @@ class MetricsServiceProvider extends ServiceProvider
         $this->app['events']->listen("*", function($eventName, $payload) {
             $event = array_pop($payload);
 
-            if(!is_object($event) || !$event instanceof ShouldReportMetric) {
-                return true;
+            if(is_object($event) && $event instanceof ShouldReportMetric) {
+                $this->app
+                    ->make(MetricsManager::class)
+                    ->add($event->createMetric());
             }
-
-            $this->app
-                ->make(MetricsManager::class)
-                ->event($event);
         });
     }
 

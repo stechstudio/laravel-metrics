@@ -25,7 +25,7 @@ interface ShouldReportMetric
     /**
      * @return array
      */
-    public function getMetricFields();
+    public function getMetricExtra();
 
     /**
      * @return mixed

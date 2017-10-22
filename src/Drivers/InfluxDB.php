@@ -8,6 +8,7 @@ use InfluxDB\Driver\UDP;
 use InfluxDB\Point;
 use STS\Metrics\Contracts\HandlesEvents;
 use STS\Metrics\Contracts\ShouldReportMetric;
+use STS\Metrics\Metric;
 
 /**
  * Class InfluxDB
@@ -84,18 +85,18 @@ class InfluxDB implements HandlesEvents
     }
 
     /**
-     * @param ShouldReportMetric $event
+     * @param Metric $metric
      *
      * @return InfluxDB
      */
-    public function event(ShouldReportMetric $event)
+    public function add(Metric $metric)
     {
         return $this->point(
-            $event->getMetricName(),
-            $event->getMetricValue(),
-            $event->getMetricTags(),
-            $event->getMetricFields(),
-            $event->getMetricTimestamp()
+            $metric->getName(),
+            $metric->getValue(),
+            $metric->getTags(),
+            $metric->getExtra(),
+            $metric->getTimestamp()
         );
     }
 
@@ -238,6 +239,11 @@ class InfluxDB implements HandlesEvents
      */
     public function __call($method, $parameters)
     {
+        if(strpos($method, 'write') === 0) {
+            return $this->getWriteConnection()->$method(...$parameters);
+        }
+
+        // If we aren't writing, we always need the TCP connection
         return $this->getTcpConnection()->$method(...$parameters);
     }
 }

@@ -1,14 +1,16 @@
 <?php
 namespace STS\Metrics\Contracts;
 
+use STS\Metrics\Metric;
+
 interface HandlesEvents
 {
     /**
-     * @param ShouldReportMetric $event
+     * @param Metric $metric
      *
      * @return mixed
      */
-    public function event(ShouldReportMetric $event);
+    public function add(Metric $metric);
 
     /**
      * @return mixed

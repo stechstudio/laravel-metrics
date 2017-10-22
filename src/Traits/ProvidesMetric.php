@@ -1,8 +1,26 @@
 <?php
 namespace STS\Metrics\Traits;
 
+use STS\Metrics\Metric;
+
+/**
+ * Class ProvidesMetric
+ * @package STS\Metrics\Traits
+ */
 trait ProvidesMetric
 {
+    /**
+     * @return Metric
+     */
+    public function createMetric()
+    {
+        return (new Metric($this->getMetricName()))
+            ->setValue($this->getMetricValue())
+            ->setTags($this->getMetricTags())
+            ->setExtra($this->getMetricExtra())
+            ->setTimestamp($this->getMetricTimestamp());
+    }
+
     /**
      * @return string
      */
@@ -36,10 +54,10 @@ trait ProvidesMetric
     /**
      * @return array
      */
-    public function getMetricFields()
+    public function getMetricExtra()
     {
-        return property_exists($this, 'metricFields')
-            ? $this->metricFields
+        return property_exists($this, 'metricExtra')
+            ? $this->metricExtra
             : [];
     }
 
