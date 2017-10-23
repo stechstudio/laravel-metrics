@@ -58,7 +58,7 @@ From there, you simple need to add:
 
 ```
 METRICS_BACKEND=influxdb
-CLOUDWATCH_NAMESPACE=..
+CLOUDWATCH_NAMESPACE=...
 ```
 
 ## Sending an individual metric
@@ -71,16 +71,26 @@ Metrics::create('order_placed')
     ->setTags([
         'source' => 'email-campaign',
         'user' => 54
-    ])
-    ->setExtra([
-        'total' => 125
-    ])
-    ->setTimestamp(Carbon::yesterday());
+    ]);
 ```
 
 The only required attribute is the `name`, everything else is optional. 
 
-The `extra` array will be mapped to fields in InfluxDB.
+## Driver mapping
+
+This is how we are mapping metric attributes in our backends.  
+
+| Metric attribute | InfluxDB      | CloudWatch        |
+| ---------------- | ------------- | ----------------- |
+| name             | measurement   | MetricName        |
+| value            | value         | Value             |
+| unit             | _ignored_     | Unit              |
+| resolution       | _ignored_     | StorageResolution |
+| tags             | tags          | Dimensions        |
+| extra            | fields        | _ignored_         |
+| timestamp        | timestamp     | Timestamp         |
+
+Every one of these attributes can be specified using a class attribute with the 'metric' prefix (like `metricName`), or using a getting function like `getMetricName()`.
 
 ## Automatically sending metrics from Laravel events
 
