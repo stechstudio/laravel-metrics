@@ -3,7 +3,7 @@ class TestCase extends Orchestra\Testbench\TestCase
 {
     protected function getPackageProviders($app)
     {
-        return ['STS\Metrics\MetricsServiceProvider'];
+        return ['STS\Metrics\MetricsServiceProvider', 'Aws\Laravel\AwsServiceProvider'];
     }
 
     protected function getPackageAliases($app)
@@ -24,6 +24,21 @@ class TestCase extends Orchestra\Testbench\TestCase
         ], $config));
 
         Metrics::setWriteConnection(new InfluxDatabaseMock("baz", Metrics::getWriteConnection()->getClient()));
+    }
+
+    protected function setupCloudWatch($config = [])
+    {
+        app('config')->set('metrics.default', 'cloudwatch');
+        app('config')->set('metrics.backends.cloudwatch.namespace', 'STS\\Test');
+
+        app('config')->set('aws', [
+            'credentials' => [
+                'key' => 'key',
+                'secret' => 'secret'
+            ],
+            'region' => 'us-east-1',
+            'version' => 'latest'
+        ]);
     }
 }
 

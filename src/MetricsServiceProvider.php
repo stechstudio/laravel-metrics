@@ -123,7 +123,7 @@ class MetricsServiceProvider extends ServiceProvider
     protected function createCloudWatchDriver(array $config)
     {
         return new CloudWatch(
-            app(Sdk::class)->createCloudWatch(), $config['namespace']
+            app(Sdk::class)->createClient('cloudwatch'), $config['namespace']
         );
     }
 }

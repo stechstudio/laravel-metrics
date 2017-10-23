@@ -106,12 +106,25 @@ class CloudWatch implements HandlesMetrics
     public function format(Metric $metric)
     {
         return [
-            'Dimensions' => $metric->getTags(),
             'MetricName' => $metric->getName(),
+            'Dimensions' => $metric->getTags(),
             'StorageResolution' => in_array($metric->getResolution(), [1, 60]) ? $metric->getResolution() : null,
             'Timestamp' => $metric->getTimestamp(),
             'Unit' => $metric->getUnit(),
             'Value' => $metric->getValue()
         ];
+    }
+
+    /**
+     * Pass through to the CloudWatch client anything we don't handle.
+     *
+     * @param $method
+     * @param $parameters
+     *
+     * @return mixed
+     */
+    public function __call($method, $parameters)
+    {
+        return $this->cloudwatch->$method(...$parameters);
     }
 }
