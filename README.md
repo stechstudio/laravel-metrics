@@ -1,5 +1,9 @@
 # Laravel Metrics
 
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
+[![Quality Score](https://img.shields.io/scrutinizer/g/stechstudio/laravel-metrics.svg?style=flat-square)](https://scrutinizer-ci.com/g/stechstudio/laravel-metrics)
+[![Total Downloads](https://img.shields.io/packagist/dt/stechstudio/laravel-metrics.svg?style=flat-square)](https://packagist.org/packages/stechstudio/laravel-metrics)
+
 This package makes it incredibly easy to ship app metrics to backends such as InfluxDB or CloudWatch (planned).
 
 There are two major components: a facade that lets you create metrics on your own, and an event listener to automatically send metrics for Laravel events.
