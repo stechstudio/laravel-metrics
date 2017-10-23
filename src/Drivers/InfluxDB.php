@@ -84,13 +84,9 @@ class InfluxDB implements HandlesMetrics
      */
     public function add(Metric $metric)
     {
-        return $this->point(
-            $metric->getName(),
-            $metric->getValue(),
-            $metric->getTags(),
-            $metric->getExtra(),
-            $metric->getTimestamp()
-        );
+        $this->metrics[] = $metric;
+
+        return $this;
     }
 
     /**
@@ -151,31 +147,55 @@ class InfluxDB implements HandlesMetrics
 
     /**
      * @return $this
+     * @throws \InfluxDB\Exception
      */
     public function flush()
     {
-        $this->addQueuedMetrics();
-
-        if (empty($this->points)) {
+        if (empty($this->getMetrics())) {
             return $this;
         }
 
-        $this->getWriteConnection()->writePoints($this->points);
-        $this->points = [];
+        $this->send($this->getMetrics());
+        $this->metrics = [];
+
+        if(count($this->points)) {
+            $this->getWriteConnection()->writePoints($this->points);
+            $this->points = [];
+        }
 
         return $this;
     }
 
     /**
+     * @param Metric $metric
      *
+     * @return Point
+     * @throws \InfluxDB\Database\Exception
      */
-    protected function addQueuedMetrics()
+    public function format(Metric $metric)
     {
-        foreach ($this->metrics AS $metric) {
-            $this->add($metric);
-        }
+        return new Point(
+            $metric->getName(),
+            $metric->getValue(),
+            array_merge($this->defaultTags, $metric->getTags()),
+            array_merge($this->defaultFields, $metric->getExtra()),
+            $this->getNanoSecondTimestamp($metric->getTimestamp())
+        );
+    }
 
-        $this->metrics = [];
+    /**
+     * Send one or more metrics to InfluxDB now
+     *
+     * @param $metrics
+     * @throws \InfluxDB\Exception
+     */
+    public function send($metrics)
+    {
+        $this->getWriteConnection()->writePoints(
+            array_map(function($metric) {
+                return $this->format($metric);
+            }, (array) $metrics)
+        );
     }
 
     /**

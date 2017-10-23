@@ -10,8 +10,8 @@ class MetricTest extends TestCase
             ->setTags(['foo' => 'bar'])
             ->add();
 
-        $this->assertEquals(1, count(Metrics::getPoints()));
-        $this->assertEquals("my_metric", Metrics::getPoints()[0]->getMeasurement());
+        $this->assertEquals(1, count(Metrics::getMetrics()));
+        $this->assertEquals("my_metric", Metrics::getMetrics()[0]->getName());
     }
 
     public function testCreatedFromDriver()

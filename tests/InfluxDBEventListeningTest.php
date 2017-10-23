@@ -11,17 +11,19 @@ class InfluxDBEventListeningTest extends TestCase
     public function testBasicEventMetricAdded()
     {
         event(new BasicEvent);
+        Metrics::flush();
 
-        $this->assertEquals(1, count(Metrics::getPoints()));
-        $this->assertEquals("basic_event", Metrics::getPoints()[0]->getMeasurement());
+        $this->assertEquals(1, count($GLOBALS['points']));
+        $this->assertEquals("basic_event", $GLOBALS['points'][0]->getMeasurement());
     }
 
     public function testMetricWithAttributes()
     {
         event(new EventWithAttributes);
+        Metrics::flush();
 
         /** @var \InfluxDB\Point $point */
-        $point = Metrics::getPoints()[0];
+        $point = $GLOBALS['points'][0];
         $this->assertEquals("order_placed", $point->getMeasurement());
         $this->assertEquals("5i", $point->getFields()['value']);
         $this->assertEquals("email", $point->getTags()['source']);
@@ -32,9 +34,10 @@ class InfluxDBEventListeningTest extends TestCase
     public function testMetricWithGetters()
     {
         event(new EventWithGetters());
+        Metrics::flush();
 
         /** @var \InfluxDB\Point $point */
-        $point = Metrics::getPoints()[0];
+        $point = $GLOBALS['points'][0];
         $this->assertEquals("user_registered", $point->getMeasurement());
         $this->assertEquals("1i", $point->getFields()['value']);
         $this->assertEquals("false", $point->getTags()['admin']);
