@@ -13,7 +13,7 @@ There are two major components: a facade that lets you create metrics on your ow
 You know the drill...
 
 ```
-composer install stechstudio/laravel-metrics
+composer require stechstudio/laravel-metrics
 ```
 
 If you're running Laravel 5.5, you're done. For Laravel 5.4 and earlier, add the following service provider and facade to `config/app.php`:
