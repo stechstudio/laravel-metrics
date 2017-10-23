@@ -12,12 +12,7 @@ return [
             'udp_port' => env('IDB_UDP_PORT')
         ],
         'cloudwatch' => [
-            // TODO
-        ],
-        'librato' => [
-            // TODO
+            'namespace' => env('CLOUDWATCH_NAMESPACE')
         ]
     ],
-
-
 ];

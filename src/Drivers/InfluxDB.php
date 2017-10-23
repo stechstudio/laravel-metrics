@@ -53,7 +53,7 @@ class InfluxDB implements HandlesMetrics
      * InfluxDB constructor.
      *
      * @param $tcpConnection
-     * @param null $udpConnection
+     * @param $udpConnection
      */
     public function __construct($tcpConnection, $udpConnection = null)
     {
@@ -80,7 +80,7 @@ class InfluxDB implements HandlesMetrics
     /**
      * @param Metric $metric
      *
-     * @return InfluxDB
+     * @return $this
      */
     public function add(Metric $metric)
     {

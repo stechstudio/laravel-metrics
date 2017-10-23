@@ -2,9 +2,11 @@
 
 namespace STS\Metrics;
 
+use Aws\Sdk;
 use Illuminate\Support\ServiceProvider;
 use InfluxDB\Client;
 use STS\Metrics\Contracts\ShouldReportMetric;
+use STS\Metrics\Drivers\CloudWatch;
 use STS\Metrics\Drivers\InfluxDB;
 
 /**
@@ -31,6 +33,10 @@ class MetricsServiceProvider extends ServiceProvider
 
         $this->app->singleton(InfluxDB::class, function() {
             return $this->createInfluxDBDriver($this->app['config']['metrics.backends.influxdb']);
+        });
+
+        $this->app->singleton(CloudWatch::class, function() {
+            return $this->createCloudWatchDriver($this->app['config']['metrics.backends.cloudwatch']);
         });
     }
 
@@ -60,7 +66,7 @@ class MetricsServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return [MetricsManager::class, InfluxDB::class];
+        return [MetricsManager::class, InfluxDB::class, CloudWatch::class];
     }
 
     /**
@@ -105,5 +111,19 @@ class MetricsServiceProvider extends ServiceProvider
             : null;
 
         return new InfluxDB($tcpConnection, $udpConnection);
+    }
+
+    /**
+     * Note this assumes you have AWS itself configured properly!
+     *
+     * @param array $config
+     *
+     * @return CloudWatch
+     */
+    protected function createCloudWatchDriver(array $config)
+    {
+        return new CloudWatch(
+            app(Sdk::class)->createCloudWatch(), $config['namespace']
+        );
     }
 }

@@ -16,9 +16,11 @@ trait ProvidesMetric
     {
         return (new Metric($this->getMetricName()))
             ->setValue($this->getMetricValue())
+            ->setUnit($this->getMetricUnit())
             ->setTags($this->getMetricTags())
             ->setExtra($this->getMetricExtra())
-            ->setTimestamp($this->getMetricTimestamp());
+            ->setTimestamp($this->getMetricTimestamp())
+            ->setResolution($this->getMetricResolution());
     }
 
     /**
@@ -38,6 +40,16 @@ trait ProvidesMetric
     {
         return property_exists($this, 'metricValue')
             ? $this->metricValue
+            : null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMetricUnit()
+    {
+        return property_exists($this, 'metricUnit')
+            ? $this->metricUnit
             : null;
     }
 
@@ -68,6 +80,16 @@ trait ProvidesMetric
     {
         return property_exists($this, 'metricTimestamp')
             ? $this->metricTimestamp
+            : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMetricResolution()
+    {
+        return property_exists($this, 'metricResolution')
+            ? $this->metricResolution
             : null;
     }
 }

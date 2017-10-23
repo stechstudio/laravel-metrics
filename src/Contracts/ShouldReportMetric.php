@@ -21,6 +21,11 @@ interface ShouldReportMetric
     public function getMetricValue();
 
     /**
+     * @return string
+     */
+    public function getMetricUnit();
+
+    /**
      * @return array
      */
     public function getMetricTags();
@@ -34,4 +39,9 @@ interface ShouldReportMetric
      * @return mixed
      */
     public function getMetricTimestamp();
+
+    /**
+     * @return int
+     */
+    public function getMetricResolution();
 }

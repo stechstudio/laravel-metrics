@@ -23,6 +23,10 @@ class Metric
      */
     protected $value;
     /**
+     * @var string
+     */
+    protected $unit;
+    /**
      * @var array
      */
     protected $tags = [];
@@ -34,6 +38,10 @@ class Metric
      * @var
      */
     protected $timestamp;
+    /**
+     * @var int
+     */
+    protected $resolution;
 
     /**
      * Metric constructor.
@@ -45,6 +53,26 @@ class Metric
     {
         $this->name = $name;
         $this->creator = $creator;
+    }
+
+    /**
+     * @return int
+     */
+    public function getResolution()
+    {
+        return $this->resolution;
+    }
+
+    /**
+     * @param int $resolution
+     *
+     * @return $this
+     */
+    public function setResolution($resolution)
+    {
+        $this->resolution = $resolution;
+
+        return $this;
     }
 
     /**
@@ -83,6 +111,26 @@ class Metric
     public function setValue($value)
     {
         $this->value = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUnit()
+    {
+        return $this->unit;
+    }
+
+    /**
+     * @param string $unit
+     *
+     * @return $this
+     */
+    public function setUnit($unit)
+    {
+        $this->unit = $unit;
 
         return $this;
     }

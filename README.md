@@ -4,7 +4,7 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/stechstudio/laravel-metrics.svg?style=flat-square)](https://scrutinizer-ci.com/g/stechstudio/laravel-metrics)
 [![Total Downloads](https://img.shields.io/packagist/dt/stechstudio/laravel-metrics.svg?style=flat-square)](https://packagist.org/packages/stechstudio/laravel-metrics)
 
-This package makes it incredibly easy to ship app metrics to backends such as InfluxDB or CloudWatch (planned).
+This package makes it incredibly easy to ship app metrics to backends such as InfluxDB or CloudWatch.
 
 There are two major components: a facade that lets you create metrics on your own, and an event listener to automatically send metrics for Laravel events.
    
@@ -32,8 +32,6 @@ If you're running Laravel 5.5, you're done. For Laravel 5.4 and earlier, add the
 
 ## Configuration
 
-Currently this package supports InfluxDB as the metrics backend, with more backends planned.
-
 ### InfluxDB
 
 Add the following to your `.env` file:
@@ -50,6 +48,17 @@ IDB_TCP_PORT=...
 
 # If you want to send metrics over UDP instead of TCP
 IDB_UDP_PORT=...
+```
+
+### CloudWatch
+
+First make sure you have AWS itself properly setup. That means installing `aws/aws-sdk-php` and making sure you have a valid `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in your .env file.
+ 
+From there, you simple need to add:
+
+```
+METRICS_BACKEND=influxdb
+CLOUDWATCH_NAMESPACE=..
 ```
 
 ## Sending an individual metric
