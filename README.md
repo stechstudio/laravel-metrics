@@ -2,7 +2,7 @@
 
 This package makes it incredibly easy to ship app metrics to backends such as InfluxDB or CloudWatch (planned).
 
-There are two major components: imperatively sending metrics, and automatically sending metrics for Laravel events.
+There are two major components: a facade that lets you create metrics on your own, and an event listener to automatically send metrics for Laravel events.
    
 ## Installation
 
@@ -50,7 +50,7 @@ IDB_UDP_PORT=...
 
 ## Sending an individual metric
 
-You can imperatively send a metric by using the facade like this:
+You can create metric by using the facade like this:
 
 ```php
 Metrics::create('order_placed')
@@ -102,11 +102,11 @@ class OrderPlaced implements ShouldReportMetric {
 }
 ```
 
-That's it. A basic event with the name `order_place` will be sent to your default backend.
+That's it. Anytime this event is dispatched, a simple metric with the name `order_placed` will be created.
 
 ## Customizing event metric data
 
-Of course, you likely will want to customize what is sent in the event metric data. You can provide any metric details by adding class attributes or getter methods to your event:
+Of course, you likely will want to customize the event metric data. 
 
 You can provide metric data with class attributes:
 
@@ -127,3 +127,5 @@ public function getMetricValue()
     return $this->order->total;
 }
 ```
+
+You can provide the metric name, value, tags, extra, or timestamp using these class attributes or getter methods. 
