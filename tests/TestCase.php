@@ -23,7 +23,7 @@ class TestCase extends Orchestra\Testbench\TestCase
             'database' => 'baz',
         ], $config));
 
-        Metrics::setTcpConnection(new InfluxDatabaseMock("baz", Metrics::getTcpConnection()->getClient()));
+        Metrics::setWriteConnection(new InfluxDatabaseMock("baz", Metrics::getWriteConnection()->getClient()));
     }
 }
 

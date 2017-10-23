@@ -4,7 +4,7 @@ namespace STS\Metrics;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method mixed add(Metric $metric)
+ * @method static mixed add(Metric $metric)
  */
 class MetricsFacade extends Facade
 {

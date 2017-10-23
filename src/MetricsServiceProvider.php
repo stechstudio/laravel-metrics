@@ -3,6 +3,7 @@
 namespace STS\Metrics;
 
 use Illuminate\Support\ServiceProvider;
+use InfluxDB\Client;
 use STS\Metrics\Contracts\ShouldReportMetric;
 use STS\Metrics\Drivers\InfluxDB;
 
@@ -29,7 +30,7 @@ class MetricsServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(InfluxDB::class, function() {
-            return $this->createInfluxDBDriver();
+            return $this->createInfluxDBDriver($this->app['config']['metrics.backends.influxdb']);
         });
     }
 
@@ -81,15 +82,28 @@ class MetricsServiceProvider extends ServiceProvider
     /**
      * @return InfluxDB
      */
-    protected function createInfluxDBDriver()
+    protected function createInfluxDBDriver(array $config)
     {
-        return new InfluxDB(
-            $this->app['config']['metrics.backends.influxdb.username'],
-            $this->app['config']['metrics.backends.influxdb.password'],
-            $this->app['config']['metrics.backends.influxdb.host'],
-            $this->app['config']['metrics.backends.influxdb.database'],
-            $this->app['config']['metrics.backends.influxdb.tcp_port'],
-            $this->app['config']['metrics.backends.influxdb.udp_port']
+        $tcpConnection = Client::fromDSN(
+            sprintf('influxdb://%s:%s@%s:%s/%s',
+                $config['username'],
+                $config['password'],
+                $config['host'],
+                array_get($config, 'tcp_port', 8086),
+                $config['database']
+            )
         );
+
+        $udpConnection = array_has($config, 'udp_port')
+            ? Client::fromDSN(sprintf('udp+influxdb://%s:%s@%s:%s/%s',
+                $config['username'],
+                $config['password'],
+                $config['host'],
+                $config['udp_port'],
+                $config['database']
+            ))
+            : null;
+
+        return new InfluxDB($tcpConnection, $udpConnection);
     }
 }

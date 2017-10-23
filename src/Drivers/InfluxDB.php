@@ -16,29 +16,13 @@ use STS\Metrics\Metric;
 class InfluxDB implements HandlesMetrics
 {
     /**
-     * @var string
+     * @var Database
      */
-    protected $username;
+    protected $readConnection;
     /**
-     * @var string
+     * @var Database
      */
-    protected $password;
-    /**
-     * @var string
-     */
-    protected $host;
-    /**
-     * @var string
-     */
-    protected $database;
-    /**
-     * @var int
-     */
-    protected $tcpPort = 8086;
-    /**
-     * @var int
-     */
-    protected $udpPort;
+    protected $writeConnection;
     /**
      * @var array
      */
@@ -64,27 +48,20 @@ class InfluxDB implements HandlesMetrics
      */
     protected $metrics = [];
 
+
     /**
      * InfluxDB constructor.
      *
-     * @param $username
-     * @param $password
-     * @param $host
-     * @param $database
-     * @param $tcpPort
-     * @param $udpPort
+     * @param $tcpConnection
+     * @param null $udpConnection
      */
-    public function __construct($username, $password, $host, $database, $tcpPort = null, $udpPort = null)
+    public function __construct($tcpConnection, $udpConnection = null)
     {
-        $this->username = $username;
-        $this->password = $password;
-        $this->host = $host;
-        $this->database = $database;
-        $this->udpPort = $udpPort;
+        $this->readConnection = $tcpConnection;
 
-        if ($tcpPort) {
-            $this->tcpPort = $tcpPort;
-        }
+        $this->writeConnection = is_null($udpConnection)
+            ? $tcpConnection
+            : $udpConnection;
     }
 
     /**
@@ -222,57 +199,35 @@ class InfluxDB implements HandlesMetrics
      */
     public function getWriteConnection()
     {
-        return is_null($this->udpPort)
-            ? $this->getTcpConnection()
-            : $this->getUdpConnection();
-    }
-
-    /**
-     * @return Database
-     */
-    public function getTcpConnection()
-    {
-        if (!$this->tcpConnection) {
-            $this->setTcpConnection(
-                (new Client($this->host, $this->tcpPort, $this->username, $this->password))->selectDB($this->database)
-            );
-        }
-
-        return $this->tcpConnection;
+        return $this->writeConnection;
     }
 
     /**
      * @param Database $connection
      */
-    public function setTcpConnection(Database $connection)
+    public function setWriteConnection(Database $connection)
     {
-        $this->tcpConnection = $connection;
+        $this->writeConnection = $connection;
     }
 
     /**
      * @return Database
      */
-    public function getUdpConnection()
+    public function getReadConnection()
     {
-        if (!$this->udpConnection) {
-            $client = new Client($this->host, $this->udpPort, $this->username, $this->password);
-            $client->setDriver(new UDP($this->host, $this->udpPort));
-            $this->setUdpConnection($client->selectDB($this->database));
-        }
-
-        return $this->udpConnection;
+        return $this->readConnection;
     }
 
     /**
      * @param Database $connection
      */
-    public function setUdpConnection(Database $connection)
+    public function setReadConnection(Database $connection)
     {
-        $this->udpConnection = $connection;
+        $this->readConnection = $connection;
     }
 
     /**
-     * Pass through to the Influx client anything we don't handle. Use TCP so we provide reading and writing.
+     * Pass through to the Influx client anything we don't handle.
      *
      * @param $method
      * @param $parameters
@@ -285,7 +240,6 @@ class InfluxDB implements HandlesMetrics
             return $this->getWriteConnection()->$method(...$parameters);
         }
 
-        // If we aren't writing, we always need the TCP connection
-        return $this->getTcpConnection()->$method(...$parameters);
+        return $this->getReadConnection()->$method(...$parameters);
     }
 }

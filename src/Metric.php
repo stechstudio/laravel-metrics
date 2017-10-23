@@ -41,7 +41,7 @@ class Metric
      * @param $name
      * @param $creator
      */
-    function __construct($name = null, $creator = null)
+    public function __construct($name = null, $creator = null)
     {
         $this->name = $name;
         $this->creator = $creator;
