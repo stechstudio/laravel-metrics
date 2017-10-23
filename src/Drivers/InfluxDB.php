@@ -94,7 +94,10 @@ class InfluxDB implements HandlesMetrics
      */
     public function create($name)
     {
-        return new Metric($name, $this);
+        $metric = new Metric($name, $this);
+        $this->metrics[] = &$metric;
+
+        return $metric;
     }
 
     /**
@@ -174,6 +177,8 @@ class InfluxDB implements HandlesMetrics
      */
     public function flush()
     {
+        $this->addQueuedMetrics();
+
         if (empty($this->points)){
             return $this;
         }
@@ -182,6 +187,18 @@ class InfluxDB implements HandlesMetrics
         $this->points = [];
 
         return $this;
+    }
+
+    /**
+     *
+     */
+    protected function addQueuedMetrics()
+    {
+        foreach($this->metrics AS $metric) {
+            $this->add($metric);
+        }
+
+        $this->metrics = [];
     }
 
     /**
