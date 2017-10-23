@@ -15,7 +15,7 @@ class MetricsManager extends Manager
      */
     public function getDefaultDriver()
     {
-        return strtolower($this->app['config']['metrics.default']);
+        return $this->app['config']['metrics.default'];
     }
 
     /**
@@ -23,13 +23,6 @@ class MetricsManager extends Manager
      */
     public function createInfluxdbDriver()
     {
-        return new InfluxDB(
-            $this->app['config']['metrics.backends.influxdb.username'],
-            $this->app['config']['metrics.backends.influxdb.password'],
-            $this->app['config']['metrics.backends.influxdb.host'],
-            $this->app['config']['metrics.backends.influxdb.database'],
-            $this->app['config']['metrics.backends.influxdb.tcp_port'],
-            $this->app['config']['metrics.backends.influxdb.udp_port']
-        );
+        return $this->app->make(InfluxDB::class);
     }
 }

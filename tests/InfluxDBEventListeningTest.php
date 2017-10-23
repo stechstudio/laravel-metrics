@@ -1,23 +1,11 @@
 <?php
 class InfluxDBEventListeningTest extends TestCase
 {
-    protected function getEnvironmentSetUp($app)
-    {
-        app('config')->set('metrics.default', 'influxdb');
-        app('config')->set('metrics.backends.influxdb', [
-            'username' => 'foo',
-            'password' => 'bar',
-            'host' => 'localhost',
-            'database' => 'baz',
-        ]);
-    }
-
     protected function setUp()
     {
         parent::setUp();
 
-        $client = Metrics::driver();
-        $client->setTcpConnection(new InfluxDBMock("baz", $client->getTcpConnection()->getClient()));
+        $this->setupInfluxDB();
     }
 
     public function testBasicEventMetricAdded()
