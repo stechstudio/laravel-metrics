@@ -47,7 +47,7 @@ class Metric
      * Metric constructor.
      *
      * @param $name
-     * @param null $value
+     * @param $value
      * @param $creator
      */
     public function __construct($name = null, $value = null, $creator = null)
