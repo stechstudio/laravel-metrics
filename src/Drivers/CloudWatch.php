@@ -15,7 +15,8 @@ class CloudWatch implements HandlesMetrics
     /**
      * @var CloudWatchClient
      */
-    protected $cloudwatch;
+    protected $client;
+
     /**
      * @var array
      */
@@ -25,11 +26,32 @@ class CloudWatch implements HandlesMetrics
      */
     protected $namespace;
 
-
-    public function __construct(CloudWatchClient $cloudwatch, $namespace)
+    /**
+     * CloudWatch constructor.
+     *
+     * @param CloudWatchClient $client
+     * @param $namespace
+     */
+    public function __construct(CloudWatchClient $client, $namespace)
     {
-        $this->cloudwatch = $cloudwatch;
+        $this->setClient($client);
         $this->namespace = $namespace;
+    }
+
+    /**
+     * @return CloudWatchClient
+     */
+    public function getClient()
+    {
+        return $this->client;
+    }
+
+    /**
+     * @param CloudWatchClient $client
+     */
+    public function setClient(CloudWatchClient $client)
+    {
+        $this->client = $client;
     }
 
     /**
@@ -74,6 +96,10 @@ class CloudWatch implements HandlesMetrics
      */
     public function flush()
     {
+        if(!count($this->getMetrics())) {
+            return $this;
+        }
+
         $this->send($this->getMetrics());
 
         $this->metrics = [];
@@ -88,12 +114,10 @@ class CloudWatch implements HandlesMetrics
      */
     public function send($metrics)
     {
-        $this->cloudwatch->putMetricData([
-            'MetricData' => [
-                array_map(function($metric) {
-                    return $this->format($metric);
-                }, (array) $metrics)
-            ],
+        $this->getClient()->putMetricData([
+            'MetricData' => array_map(function($metric) {
+                                return $this->format($metric);
+                            }, (array) $metrics),
             'Namespace' => $this->namespace
         ]);
     }
@@ -105,14 +129,14 @@ class CloudWatch implements HandlesMetrics
      */
     public function format(Metric $metric)
     {
-        return [
+        return array_filter([
             'MetricName' => $metric->getName(),
             'Dimensions' => $metric->getTags(),
             'StorageResolution' => in_array($metric->getResolution(), [1, 60]) ? $metric->getResolution() : null,
             'Timestamp' => $metric->getTimestamp(),
             'Unit' => $metric->getUnit(),
             'Value' => $metric->getValue()
-        ];
+        ]);
     }
 
     /**
@@ -125,6 +149,6 @@ class CloudWatch implements HandlesMetrics
      */
     public function __call($method, $parameters)
     {
-        return $this->cloudwatch->$method(...$parameters);
+        return $this->client->$method(...$parameters);
     }
 }

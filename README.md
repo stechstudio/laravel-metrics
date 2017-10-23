@@ -30,7 +30,7 @@ If you're running Laravel 5.5, you're done. For Laravel 5.4 and earlier, add the
 ],
 ```
 
-## Configuration
+## Backend configuration
 
 ### InfluxDB
 
