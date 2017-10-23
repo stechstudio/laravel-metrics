@@ -16,11 +16,6 @@ use STS\Metrics\Drivers\InfluxDB;
 class MetricsServiceProvider extends ServiceProvider
 {
     /**
-     * @var bool
-     */
-    protected $defer = false;
-
-    /**
      *
      */
     public function register()
