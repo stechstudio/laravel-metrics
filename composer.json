@@ -1,6 +1,6 @@
 {
-    "name": "stechstudio/laravel-event-metrics",
-    "description": "Easily send metrics in Laravel to InfluxDB",
+    "name": "stechstudio/laravel-metrics",
+    "description": "Easily track metrics from Laravel events, or on your own",
     "type": "library",
     "license": "MIT",
     "authors": [
