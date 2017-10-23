@@ -54,7 +54,7 @@ IDB_UDP_PORT=...
 
 First make sure you have AWS itself properly setup. That means installing `aws/aws-sdk-php` and making sure you have a valid `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in your .env file.
  
-From there, you simple need to add:
+From there, you simply need to add:
 
 ```
 METRICS_BACKEND=influxdb
@@ -89,8 +89,6 @@ This is how we are mapping metric attributes in our backends.
 | tags             | tags          | Dimensions        |
 | extra            | fields        | _ignored_         |
 | timestamp        | timestamp     | Timestamp         |
-
-Every one of these attributes can be specified using a class attribute with the 'metric' prefix (like `metricName`), or using a getting function like `getMetricName()`.
 
 ## Automatically sending metrics from Laravel events
 
@@ -151,4 +149,4 @@ public function getMetricValue()
 }
 ```
 
-You can provide the metric name, value, tags, extra, or timestamp using these class attributes or getter methods. 
+You can provide any of our metric attributes using these class attributes or getter methods. 
