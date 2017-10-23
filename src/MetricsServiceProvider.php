@@ -95,7 +95,7 @@ class MetricsServiceProvider extends ServiceProvider
                 $config['username'],
                 $config['password'],
                 $config['host'],
-                (string) array_get($config, 'tcp_port', 8086),
+                $config['tcp_host'],
                 $config['database']
             )
         );
