@@ -23,7 +23,13 @@ class TestCase extends Orchestra\Testbench\TestCase
             'database' => 'baz',
         ], $config));
 
-        Metrics::setWriteConnection(new InfluxDatabaseMock("baz", Metrics::getWriteConnection()->getClient()));
+        $mock = Mockery::mock(\InfluxDB\Database::class, ["db_name", Metrics::getWriteConnection()->getClient()])->makePartial();
+        $mock->shouldReceive('writePoints')
+            ->andReturnUsing(function($points) {
+                $GLOBALS['points'] = $points;
+            });
+
+        Metrics::setWriteConnection($mock);
     }
 
     protected function setupCloudWatch($config = [])
@@ -39,19 +45,12 @@ class TestCase extends Orchestra\Testbench\TestCase
             'region' => 'us-east-1',
             'version' => 'latest'
         ]);
-    }
-}
 
-/**
- * We want our Influx client to "flush" metrics simply by writing them to $GLOBALS. Yeah, I could
- * use a mock library. This seems easier.
- */
-class InfluxDatabaseMock extends \InfluxDB\Database
-{
-    public function writePoints(array $points, $precision = \InfluxDB\Database::PRECISION_NANOSECONDS, $retentionPolicy = null)
-    {
-        $GLOBALS['points'] = $points;
-
-        return true;
+        $mock = Mockery::mock(\Aws\CloudWatch\CloudWatchClient::class)->makePartial();
+        $mock->shouldReceive('putMetricData')
+            ->andReturnUsing(function($args) {
+                $GLOBALS['metrics'] = $args;
+            });
+        Metrics::setClient($mock);
     }
 }
