@@ -38,8 +38,8 @@ class Metric
     /**
      * Metric constructor.
      *
-     * @param null $name
-     * @param null $creator
+     * @param $name
+     * @param $creator
      */
     function __construct($name = null, $creator = null)
     {
@@ -48,7 +48,7 @@ class Metric
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getName()
     {
@@ -56,7 +56,7 @@ class Metric
     }
 
     /**
-     * @param mixed $name
+     * @param string $name
      *
      * @return $this
      */

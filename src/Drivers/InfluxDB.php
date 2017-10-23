@@ -82,7 +82,7 @@ class InfluxDB implements HandlesMetrics
         $this->database = $database;
         $this->udpPort = $udpPort;
 
-        if($tcpPort) {
+        if ($tcpPort) {
             $this->tcpPort = $tcpPort;
         }
     }
@@ -120,10 +120,10 @@ class InfluxDB implements HandlesMetrics
      * Queue up a new point
      *
      * @param string $measurement the name of the measurement ... 'this-data'
-     * @param null   $value       measurement value ... 15
+     * @param mixed  $value       measurement value ... 15
      * @param array  $tags        measurement tags  ... ['host' => 'server01', 'region' => 'us-west']
      * @param array  $fields      measurement fields ... ['cpucount' => 10, 'free' => 2]
-     * @param null   $timestamp   timestamp in nanoseconds on Linux ONLY
+     * @param mixed  $timestamp   timestamp in nanoseconds on Linux ONLY
      *
      * @return $this
      */
@@ -143,13 +143,13 @@ class InfluxDB implements HandlesMetrics
     /**
      * A public way tog et the nanosecond precision we desire.
      *
-     * @param null $timestamp
+     * @param mixed $timestamp
      *
      * @return int|null
      */
     public function getNanoSecondTimestamp($timestamp = null)
     {
-        if($timestamp instanceof \DateTime) {
+        if ($timestamp instanceof \DateTime) {
             return $timestamp->getTimestamp() * 1000000000;
         }
 
@@ -179,7 +179,7 @@ class InfluxDB implements HandlesMetrics
     {
         $this->addQueuedMetrics();
 
-        if (empty($this->points)){
+        if (empty($this->points)) {
             return $this;
         }
 
@@ -194,7 +194,7 @@ class InfluxDB implements HandlesMetrics
      */
     protected function addQueuedMetrics()
     {
-        foreach($this->metrics AS $metric) {
+        foreach ($this->metrics AS $metric) {
             $this->add($metric);
         }
 
@@ -232,7 +232,7 @@ class InfluxDB implements HandlesMetrics
      */
     public function getTcpConnection()
     {
-        if(!$this->tcpConnection) {
+        if (!$this->tcpConnection) {
             $this->setTcpConnection(
                 (new Client($this->host, $this->tcpPort, $this->username, $this->password))->selectDB($this->database)
             );
@@ -254,7 +254,7 @@ class InfluxDB implements HandlesMetrics
      */
     public function getUdpConnection()
     {
-        if(!$this->udpConnection) {
+        if (!$this->udpConnection) {
             $client = new Client($this->host, $this->udpPort, $this->username, $this->password);
             $client->setDriver(new UDP($this->host, $this->udpPort));
             $this->setUdpConnection($client->selectDB($this->database));
@@ -281,7 +281,7 @@ class InfluxDB implements HandlesMetrics
      */
     public function __call($method, $parameters)
     {
-        if(strpos($method, 'write') === 0) {
+        if (strpos($method, 'write') === 0) {
             return $this->getWriteConnection()->$method(...$parameters);
         }
 

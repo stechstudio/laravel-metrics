@@ -1,12 +1,19 @@
 <?php
 namespace STS\Metrics\Contracts;
 
+use STS\Metrics\Metric;
+
 /**
  * Interface ShouldReportMetric
  * @package STS\EventMetrics
  */
 interface ShouldReportMetric
 {
+    /**
+     * @return Metric
+     */
+    public function createMetric();
+
     /**
      * @return string
      */

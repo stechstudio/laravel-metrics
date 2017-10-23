@@ -48,6 +48,7 @@ class MetricsServiceProvider extends ServiceProvider
             if(is_object($event) && $event instanceof ShouldReportMetric) {
                 $this->app
                     ->make(MetricsManager::class)
+                    ->driver()
                     ->add($event->createMetric());
             }
         });
