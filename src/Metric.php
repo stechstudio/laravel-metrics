@@ -2,7 +2,7 @@
 namespace STS\Metrics;
 
 use STS\Metrics\Contracts\HandlesMetrics;
-use Illuminate\Support\Facades\Facade as Metrics;
+use STS\Metrics\MetricsFacade as Metrics;
 
 /**
  * Class Metric
