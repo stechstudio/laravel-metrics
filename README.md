@@ -90,6 +90,8 @@ This is how we are mapping metric attributes in our backends.
 | extra            | fields        | _ignored_         |
 | timestamp        | timestamp     | Timestamp         |
 
+See the [CloudWatch docs](http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_MetricDatum.html) and [InfluxDB docs](https://docs.influxdata.com/influxdb/latest/concepts/key_concepts/) for more information on their respective data formats. Note we only do minimal validation, you are expected to know what data types and formats your backend supports for a given metric attribute.
+
 ## Automatically sending metrics from Laravel events
 
 This is where things really get fun! Let's say you have a simple Laravel event called OrderPlaced:
