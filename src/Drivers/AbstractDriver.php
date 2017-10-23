@@ -27,12 +27,13 @@ abstract class AbstractDriver
 
     /**
      * @param $name
+     * @param $value
      *
      * @return Metric
      */
-    public function create($name)
+    public function create($name, $value = null)
     {
-        $metric = new Metric($name, $this);
+        $metric = new Metric($name, $value, $this);
         $this->metrics[] = &$metric;
 
         return $metric;

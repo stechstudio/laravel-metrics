@@ -47,11 +47,14 @@ class Metric
      * Metric constructor.
      *
      * @param $name
+     * @param null $value
      * @param $creator
      */
-    public function __construct($name = null, $creator = null)
+    public function __construct($name = null, $value = null, $creator = null)
     {
-        $this->name = $name;
+        $this->setName($name);
+        $this->setValue($value);
+
         $this->creator = $creator;
     }
 

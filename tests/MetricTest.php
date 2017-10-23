@@ -5,13 +5,13 @@ class MetricTest extends TestCase
     {
         $this->setupInfluxDB();
 
-        (new \STS\Metrics\Metric("my_metric"))
-            ->setValue(5)
+        (new \STS\Metrics\Metric("my_metric", 5))
             ->setTags(['foo' => 'bar'])
             ->add();
 
         $this->assertEquals(1, count(Metrics::getMetrics()));
         $this->assertEquals("my_metric", Metrics::getMetrics()[0]->getName());
+        $this->assertEquals(5, Metrics::getMetrics()[0]->getValue());
     }
 
     public function testCreatedFromDriver()
