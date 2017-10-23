@@ -11,7 +11,7 @@ use STS\Metrics\Metric;
 
 /**
  * Class InfluxDB
- * @package STS\EventMetrics\Drivers
+ * @package STS\Metrics\Drivers
  */
 class InfluxDB implements HandlesMetrics
 {

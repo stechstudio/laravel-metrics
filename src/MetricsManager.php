@@ -6,7 +6,7 @@ use STS\Metrics\Drivers\InfluxDB;
 
 /**
  * Class MetricsManager
- * @package STS\EventMetrics
+ * @package STS\Metrics
  */
 class MetricsManager extends Manager
 {

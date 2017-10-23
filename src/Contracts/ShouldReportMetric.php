@@ -3,10 +3,6 @@ namespace STS\Metrics\Contracts;
 
 use STS\Metrics\Metric;
 
-/**
- * Interface ShouldReportMetric
- * @package STS\EventMetrics
- */
 interface ShouldReportMetric
 {
     /**

@@ -8,7 +8,7 @@ use STS\Metrics\Drivers\InfluxDB;
 
 /**
  * Class MetricsServiceProvider
- * @package STS\EventMetrics
+ * @package STS\Metrics
  */
 class MetricsServiceProvider extends ServiceProvider
 {
