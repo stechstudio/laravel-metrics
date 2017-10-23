@@ -57,7 +57,7 @@ First make sure you have AWS itself properly setup. That means installing [`aws-
 From there, you simply need to add:
 
 ```
-METRICS_BACKEND=influxdb
+METRICS_BACKEND=cloudwatch
 CLOUDWATCH_NAMESPACE=...
 ```
 
