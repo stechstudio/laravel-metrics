@@ -95,7 +95,7 @@ class MetricsServiceProvider extends ServiceProvider
                 $config['username'],
                 $config['password'],
                 $config['host'],
-                $config['tcp_host'],
+                $config['tcp_port'],
                 $config['database']
             )
         );
