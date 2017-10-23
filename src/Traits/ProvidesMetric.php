@@ -40,7 +40,7 @@ trait ProvidesMetric
     {
         return property_exists($this, 'metricValue')
             ? $this->metricValue
-            : null;
+            : 1;
     }
 
     /**
