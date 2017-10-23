@@ -35,7 +35,7 @@ class TestCase extends Orchestra\Testbench\TestCase
     protected function setupCloudWatch($config = [])
     {
         app('config')->set('metrics.default', 'cloudwatch');
-        app('config')->set('metrics.backends.cloudwatch.namespace', 'STS\\Test');
+        app('config')->set('metrics.backends.cloudwatch.namespace', 'Testing');
 
         app('config')->set('aws', [
             'credentials' => [

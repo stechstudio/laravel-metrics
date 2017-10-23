@@ -83,7 +83,7 @@ This is how we are mapping metric attributes in our backends.
 | Metric attribute | InfluxDB      | CloudWatch        |
 | ---------------- | ------------- | ----------------- |
 | name             | measurement   | MetricName        |
-| value            | value         | Value             |
+| value            | fields[value] | Value             |
 | unit             | _ignored_     | Unit              |
 | resolution       | _ignored_     | StorageResolution |
 | tags             | tags          | Dimensions        |
@@ -125,7 +125,7 @@ class OrderPlaced implements ShouldReportMetric {
 }
 ```
 
-That's it. Anytime this event is dispatched, a simple metric with the name `order_placed` will be created.
+That's it. Anytime this event is dispatched, a simple metric with the name `order_placed` and value of `1` will be created.
 
 ## Customizing event metric data
 
@@ -138,7 +138,7 @@ class OrderPlaced implements ShouldReportMetric {
     use ProvidesMetric;
     
     protected $metricName = "new_order";
-    protected $metricValue = 1;
+    protected $metricTags = ["category" => "revenue"];
     ...
 ```
 
