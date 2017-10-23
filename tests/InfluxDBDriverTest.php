@@ -35,4 +35,23 @@ class InfluxDBDriverTest extends TestCase
         $this->assertEquals(1508713728000000000, $influx->getNanoSecondTimestamp(1508713728));
         $this->assertEquals(1508713728000000000, $influx->getNanoSecondTimestamp(new \DateTime('@1508713728')));
     }
+
+    public function testDefaultTagsExtra()
+    {
+        $this->setupInfluxDB();
+
+        $driver = app(InfluxDB::class);
+
+        $driver->setTags(['tag1' => 'tag_value'])->setExtra(['extra1' => 'extra_value']);
+
+        $metric = (new \STS\Metrics\Metric("my_metric"))
+            ->setTags(['foo' => 'bar']);
+
+        $point = $driver->format($metric);
+
+        $this->assertCount(2, $point->getTags());
+        $this->assertEquals("tag_value", $point->getTags()['tag1']);
+        $this->assertCount(1, $point->getFields());
+        $this->assertEquals('"extra_value"', $point->getFields()['extra1']);
+    }
 }

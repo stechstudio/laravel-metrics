@@ -21,4 +21,21 @@ class CloudWatchDriverTest extends TestCase
         $this->assertEquals(1, $formatted['StorageResolution']);
         $this->assertEquals('Megabytes', $formatted['Unit']);
     }
+
+    public function testDefaultTagsExtra()
+    {
+        $this->setupInfluxDB();
+
+        $driver = app(CloudWatch::class);
+
+        $driver->setTags(['tag1' => 'tag_value'])->setExtra(['extra1' => 'extra_value']);
+
+        $metric = (new \STS\Metrics\Metric("my_metric"))
+            ->setTags(['foo' => 'bar']);
+
+        $formatted = $driver->format($metric);
+
+        $this->assertCount(2, $formatted['Dimensions']);
+        $this->assertEquals("tag_value", $formatted['Dimensions']['tag1']);
+    }
 }

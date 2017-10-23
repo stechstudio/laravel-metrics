@@ -13,7 +13,7 @@ use STS\Metrics\Metric;
  * Class InfluxDB
  * @package STS\Metrics\Drivers
  */
-class InfluxDB implements HandlesMetrics
+class InfluxDB extends AbstractDriver implements HandlesMetrics
 {
     /**
      * @var Database
@@ -35,19 +35,6 @@ class InfluxDB implements HandlesMetrics
      * @var Database
      */
     protected $udpConnection;
-    /**
-     * @var array
-     */
-    protected $defaultTags = [];
-    /**
-     * @var array
-     */
-    protected $defaultFields = [];
-    /**
-     * @var array
-     */
-    protected $metrics = [];
-
 
     /**
      * InfluxDB constructor.
@@ -62,31 +49,6 @@ class InfluxDB implements HandlesMetrics
         $this->writeConnection = is_null($udpConnection)
             ? $tcpConnection
             : $udpConnection;
-    }
-
-    /**
-     * @param $name
-     *
-     * @return Metric
-     */
-    public function create($name)
-    {
-        $metric = new Metric($name, $this);
-        $this->metrics[] = &$metric;
-
-        return $metric;
-    }
-
-    /**
-     * @param Metric $metric
-     *
-     * @return $this
-     */
-    public function add(Metric $metric)
-    {
-        $this->metrics[] = $metric;
-
-        return $this;
     }
 
     /**
@@ -105,8 +67,8 @@ class InfluxDB implements HandlesMetrics
         $this->points[] = new Point(
             $measurement,
             $value,
-            array_merge($this->defaultTags, $tags),
-            array_merge($this->defaultFields, $fields),
+            array_merge($this->tags, $tags),
+            array_merge($this->extra, $fields),
             $this->getNanoSecondTimestamp($timestamp)
         );
 
@@ -177,8 +139,8 @@ class InfluxDB implements HandlesMetrics
         return new Point(
             $metric->getName(),
             $metric->getValue(),
-            array_merge($this->defaultTags, $metric->getTags()),
-            array_merge($this->defaultFields, $metric->getExtra()),
+            array_merge($this->tags, $metric->getTags()),
+            array_merge($this->extra, $metric->getExtra()),
             $this->getNanoSecondTimestamp($metric->getTimestamp())
         );
     }
@@ -204,14 +166,6 @@ class InfluxDB implements HandlesMetrics
     public function getPoints()
     {
         return $this->points;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMetrics()
-    {
-        return $this->metrics;
     }
 
     /**

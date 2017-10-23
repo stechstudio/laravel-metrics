@@ -10,17 +10,13 @@ use STS\Metrics\Metric;
  * Class CloudWatch
  * @package STS\Metrics\Drivers
  */
-class CloudWatch implements HandlesMetrics
+class CloudWatch extends AbstractDriver implements HandlesMetrics
 {
     /**
      * @var CloudWatchClient
      */
     protected $client;
 
-    /**
-     * @var array
-     */
-    protected $metrics = [];
     /**
      * @var string
      */
@@ -52,41 +48,6 @@ class CloudWatch implements HandlesMetrics
     public function setClient(CloudWatchClient $client)
     {
         $this->client = $client;
-    }
-
-    /**
-     * @param $name
-     *
-     * @return Metric
-     */
-    public function create($name)
-    {
-        $metric = new Metric($name, $this);
-        $this->metrics[] = &$metric;
-
-        return $metric;
-    }
-
-    /**
-     * Queue up a metric to be sent later
-     *
-     * @param Metric $metric
-     *
-     * @return $this
-     */
-    public function add(Metric $metric)
-    {
-        $this->metrics[] = $metric;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMetrics()
-    {
-        return $this->metrics;
     }
 
     /**
@@ -131,7 +92,7 @@ class CloudWatch implements HandlesMetrics
     {
         return array_filter([
             'MetricName' => $metric->getName(),
-            'Dimensions' => $metric->getTags(),
+            'Dimensions' => array_merge($this->tags, $metric->getTags()),
             'StorageResolution' => in_array($metric->getResolution(), [1, 60]) ? $metric->getResolution() : null,
             'Timestamp' => $metric->getTimestamp(),
             'Unit' => $metric->getUnit(),

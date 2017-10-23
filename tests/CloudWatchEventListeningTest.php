@@ -85,3 +85,4 @@ class CloudWatchEventWithGetters implements \STS\Metrics\Contracts\ShouldReportM
         return 1508702054;
     }
 }
+;

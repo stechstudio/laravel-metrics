@@ -1,6 +1,6 @@
 <?php
 return [
-    'default' => env('METRICS_BACKEND', 'influxdb'),
+    'default' => env('METRICS_BACKEND'),
 
     'backends' => [
         'influxdb' => [
