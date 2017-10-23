@@ -21,6 +21,7 @@ class TestCase extends Orchestra\Testbench\TestCase
             'password' => 'bar',
             'host' => 'localhost',
             'database' => 'baz',
+            'tcp_port' => 8086
         ], $config));
 
         $mock = Mockery::mock(\InfluxDB\Database::class, ["db_name", Metrics::getWriteConnection()->getClient()])->makePartial();
