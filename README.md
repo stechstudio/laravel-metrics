@@ -97,10 +97,10 @@ See the [CloudWatch docs](http://docs.aws.amazon.com/AmazonCloudWatch/latest/API
 
 The main motivation for this library was to send metrics automatically when certain events occur in a Laravel application. So this is where things really get fun! 
 
-Let's say you have a simple Laravel event called OrderPlaced:
+Let's say you have a simple Laravel event called OrderReceived:
 
 ```php
-class OrderPlaced {
+class OrderReceived {
     protected $order;
     
     public function __construct($order)
@@ -115,7 +115,7 @@ The first step is to implement an interface:
 ```php
 use STS\Metrics\Contracts\ShouldReportMetric;
 
-class OrderPlaced implements ShouldReportMetric {
+class OrderReceived implements ShouldReportMetric {
 ```
 
 This will tell the global event listener to send a metric for this event. 
@@ -130,11 +130,11 @@ You can also include a trait that helps with building this metric:
 use STS\Metrics\Contracts\ShouldReportMetric;
 use STS\Metrics\Traits\ProvidesMetric;
 
-class OrderPlaced implements ShouldReportMetric {
+class OrderReceived implements ShouldReportMetric {
     use ProvidesMetric;
 ```
 
-In this case, the trait will build a metric called `order_placed` (taken from the class name) with a value of `1`.
+In this case, the trait will build a metric called `order_received` (taken from the class name) with a value of `1`.
 
 #### Customizing event metric data
 
@@ -143,7 +143,7 @@ If you decide to use the trait, you likely will want to customize the event metr
 You can provide metric data with class attributes:
 
 ```php
-class OrderPlaced implements ShouldReportMetric {
+class OrderReceived implements ShouldReportMetric {
     use ProvidesMetric;
     
     protected $metricName = "new_order";
@@ -170,7 +170,7 @@ Depending on how much detail you need to provide for your metric, it may be simp
 use STS\Metrics\Contracts\ShouldReportMetric;
 use STS\Metrics\Metric;
 
-class OrderPlaced implements ShouldReportMetric {
+class OrderReceived implements ShouldReportMetric {
     protected $order;
     
     public function __construct($order)
@@ -180,11 +180,11 @@ class OrderPlaced implements ShouldReportMetric {
     
     public function createMetric()
     {
-        return (new Metric('order_placed'))
+        return (new Metric('order_received'))
             ->setValue(...)
             ->setTags([...])
             ->setTimestamp(...)
-            ->setResolutions(...)';
+            ->setResolutions(...);
     }
 }
 ```

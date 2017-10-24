@@ -26,6 +26,8 @@ class MetricsServiceProvider extends ServiceProvider
             return $this->createManager();
         });
 
+        $this->app->alias(MetricsManager::class, 'metrics');
+
         $this->app->singleton(InfluxDB::class, function () {
             return $this->createInfluxDBDriver($this->app['config']['metrics.backends.influxdb']);
         });
@@ -50,7 +52,7 @@ class MetricsServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return [MetricsManager::class, InfluxDB::class, CloudWatch::class];
+        return ['metrics', MetricsManager::class, InfluxDB::class, CloudWatch::class];
     }
 
     /**
