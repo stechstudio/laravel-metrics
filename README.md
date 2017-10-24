@@ -122,32 +122,7 @@ This will tell the global event listener to send a metric for this event.
 
 There are two different ways you can then provide the metric details.
 
-### 1. Create the metric yourself
-
-If you'd like you can simple provide a public `createMetric` function that returns a new `Metric` instance:
-
-```php
-use STS\Metrics\Contracts\ShouldReportMetric;
-use STS\Metrics\Metric;
-
-class OrderPlaced implements ShouldReportMetric {
-    protected $order;
-    
-    public function __construct($order)
-    {
-        $this->order = $order;
-    }
-    
-    public function createMetric()
-    {
-        return new Metric('order_placed', 1);
-    }
-}
-```
-
-This is a simple example, of course you might want to include tags, extra fields, etc.
-
-### 2. Use the `ProvidesMetric` trait
+### 1. Use the `ProvidesMetric` trait
 
 You can also include a trait that helps with building this metric:
  
@@ -186,3 +161,30 @@ public function getMetricValue()
 ```
 
 You can provide any of our metric attributes using these class attributes or getter methods. 
+
+### 2. Create the metric yourself
+
+Depending on how much detail you need to provide for your metric, it may be simpler to just build it yourself. In this case you can ditch the trait and simply provide a public `createMetric` function that returns a new `Metric` instance:
+
+```php
+use STS\Metrics\Contracts\ShouldReportMetric;
+use STS\Metrics\Metric;
+
+class OrderPlaced implements ShouldReportMetric {
+    protected $order;
+    
+    public function __construct($order)
+    {
+        $this->order = $order;
+    }
+    
+    public function createMetric()
+    {
+        return (new Metric('order_placed'))
+            ->setValue(...)
+            ->setTags([...])
+            ->setTimestamp(...)
+            ->setResolutions(...)';
+    }
+}
+```
