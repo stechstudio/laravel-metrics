@@ -54,4 +54,13 @@ class InfluxDBDriverTest extends TestCase
         $this->assertCount(1, $point->getFields());
         $this->assertEquals('"extra_value"', $point->getFields()['extra1']);
     }
+
+    public function testPassthru()
+    {
+        $this->setupInfluxDB(['database' => 'dbname'], false);
+        $driver = app(InfluxDB::class);
+
+        // This call passes through our driver to the underlying influx Database class
+        $this->assertEquals("dbname", $driver->getName());
+    }
 }

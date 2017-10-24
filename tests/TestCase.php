@@ -13,7 +13,7 @@ class TestCase extends Orchestra\Testbench\TestCase
         ];
     }
 
-    protected function setupInfluxDB($config = [])
+    protected function setupInfluxDB($config = [], $mock = true)
     {
         app('config')->set('metrics.default', 'influxdb');
         app('config')->set('metrics.backends.influxdb', array_merge([
@@ -24,16 +24,18 @@ class TestCase extends Orchestra\Testbench\TestCase
             'tcp_port' => 8086
         ], $config));
 
-        $mock = Mockery::mock(\InfluxDB\Database::class, ["db_name", Metrics::getWriteConnection()->getClient()])->makePartial();
-        $mock->shouldReceive('writePoints')
-            ->andReturnUsing(function($points) {
-                $GLOBALS['points'] = $points;
-            });
+        if($mock) {
+            $mock = Mockery::mock(\InfluxDB\Database::class, ["db_name", Metrics::getWriteConnection()->getClient()])->makePartial();
+            $mock->shouldReceive('writePoints')
+                ->andReturnUsing(function ($points) {
+                    $GLOBALS['points'] = $points;
+                });
 
-        Metrics::setWriteConnection($mock);
+            Metrics::setWriteConnection($mock);
+        }
     }
 
-    protected function setupCloudWatch($config = [])
+    protected function setupCloudWatch($config = [], $mock = true)
     {
         app('config')->set('metrics.default', 'cloudwatch');
         app('config')->set('metrics.backends.cloudwatch.namespace', 'Testing');
@@ -47,11 +49,13 @@ class TestCase extends Orchestra\Testbench\TestCase
             'version' => 'latest'
         ]);
 
-        $mock = Mockery::mock(\Aws\CloudWatch\CloudWatchClient::class)->makePartial();
-        $mock->shouldReceive('putMetricData')
-            ->andReturnUsing(function($args) {
-                $GLOBALS['metrics'] = $args;
-            });
-        Metrics::setClient($mock);
+        if($mock) {
+            $mock = Mockery::mock(\Aws\CloudWatch\CloudWatchClient::class)->makePartial();
+            $mock->shouldReceive('putMetricData')
+                ->andReturnUsing(function($args) {
+                    $GLOBALS['metrics'] = $args;
+                });
+            Metrics::setClient($mock);
+        }
     }
 }

@@ -109,6 +109,6 @@ class CloudWatch extends AbstractDriver
      */
     public function __call($method, $parameters)
     {
-        return $this->client->$method(...$parameters);
+        return $this->getClient()->$method(...$parameters);
     }
 }

@@ -24,8 +24,7 @@ class CloudWatchDriverTest extends TestCase
 
     public function testDefaultTagsExtra()
     {
-        $this->setupInfluxDB();
-
+        $this->setupCloudWatch();
         $driver = app(CloudWatch::class);
 
         $driver->setTags(['tag1' => 'tag_value'])->setExtra(['extra1' => 'extra_value']);
@@ -37,5 +36,14 @@ class CloudWatchDriverTest extends TestCase
 
         $this->assertCount(2, $formatted['Dimensions']);
         $this->assertEquals("tag_value", $formatted['Dimensions']['tag1']);
+    }
+
+    public function testPassthru()
+    {
+        $this->setupCloudWatch([], false);
+        $driver = app(CloudWatch::class);
+
+        // This call passes through our driver to the underlying influx CloudWatchClient class
+        $this->assertInstanceOf(\Aws\Api\Service::class, $driver->getApi());
     }
 }
