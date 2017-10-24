@@ -3,7 +3,6 @@
 namespace STS\Metrics;
 
 use STS\Metrics\Drivers\AbstractDriver;
-use STS\Metrics\MetricsFacade as Metrics;
 
 /**
  * Class Metric
@@ -234,7 +233,7 @@ class Metric
     {
         return $this->driver
             ? $this->driver
-            : Metrics::driver();
+            : app('metrics')->driver();
     }
 
     /**
