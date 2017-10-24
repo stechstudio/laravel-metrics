@@ -1,4 +1,5 @@
 <?php
+
 namespace STS\Metrics;
 
 use STS\Metrics\Contracts\HandlesMetrics;
@@ -221,7 +222,7 @@ class Metric
      */
     public function add()
     {
-        if($this->creator) {
+        if ($this->creator) {
             return $this->creator->add($this);
         }
 

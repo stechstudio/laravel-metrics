@@ -26,7 +26,7 @@ class CloudWatch extends AbstractDriver implements HandlesMetrics
      * CloudWatch constructor.
      *
      * @param CloudWatchClient $client
-     * @param $namespace
+     * @param                  $namespace
      */
     public function __construct(CloudWatchClient $client, $namespace)
     {
@@ -51,13 +51,13 @@ class CloudWatch extends AbstractDriver implements HandlesMetrics
     }
 
     /**
-     * Flush all queued metrics to cloudwtach
+     * Flush all queued metrics to CloudWatch
      *
      * @return $this
      */
     public function flush()
     {
-        if(!count($this->getMetrics())) {
+        if (!count($this->getMetrics())) {
             return $this;
         }
 
@@ -69,17 +69,17 @@ class CloudWatch extends AbstractDriver implements HandlesMetrics
     }
 
     /**
-     * Send one or more metrics to cloudwatch now
+     * Send one or more metrics to CloudWatch now
      *
      * @param $metrics
      */
     public function send($metrics)
     {
         $this->getClient()->putMetricData([
-            'MetricData' => array_map(function($metric) {
-                                return $this->format($metric);
-                            }, (array) $metrics),
-            'Namespace' => $this->namespace
+            'MetricData' => array_map(function ($metric) {
+                return $this->format($metric);
+            }, (array)$metrics),
+            'Namespace'  => $this->namespace
         ]);
     }
 
@@ -91,12 +91,12 @@ class CloudWatch extends AbstractDriver implements HandlesMetrics
     public function format(Metric $metric)
     {
         return array_filter([
-            'MetricName' => $metric->getName(),
-            'Dimensions' => array_merge($this->tags, $metric->getTags()),
+            'MetricName'        => $metric->getName(),
+            'Dimensions'        => array_merge($this->tags, $metric->getTags()),
             'StorageResolution' => in_array($metric->getResolution(), [1, 60]) ? $metric->getResolution() : null,
-            'Timestamp' => $metric->getTimestamp(),
-            'Unit' => $metric->getUnit(),
-            'Value' => $metric->getValue()
+            'Timestamp'         => $metric->getTimestamp(),
+            'Unit'              => $metric->getUnit(),
+            'Value'             => $metric->getValue()
         ]);
     }
 

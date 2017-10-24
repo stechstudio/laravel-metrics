@@ -1,4 +1,5 @@
 <?php
+
 namespace STS\Metrics\Contracts;
 
 use STS\Metrics\Metric;
@@ -15,12 +16,12 @@ interface HandlesMetrics
     /**
      * @param Metric $metric
      *
-     * @return mixed
+     * @return $this
      */
     public function add(Metric $metric);
 
     /**
-     * @return mixed
+     * @return $this
      */
     public function flush();
 

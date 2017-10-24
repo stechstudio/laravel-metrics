@@ -1,4 +1,5 @@
 <?php
+
 namespace STS\Metrics\Contracts;
 
 use STS\Metrics\Metric;

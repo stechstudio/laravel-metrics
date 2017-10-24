@@ -1,4 +1,5 @@
 <?php
+
 namespace STS\Metrics;
 
 use Illuminate\Support\Manager;

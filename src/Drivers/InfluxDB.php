@@ -2,9 +2,7 @@
 
 namespace STS\Metrics\Drivers;
 
-use InfluxDB\Client;
 use InfluxDB\Database;
-use InfluxDB\Driver\UDP;
 use InfluxDB\Point;
 use STS\Metrics\Contracts\HandlesMetrics;
 use STS\Metrics\Metric;
@@ -120,7 +118,7 @@ class InfluxDB extends AbstractDriver implements HandlesMetrics
         $this->send($this->getMetrics());
         $this->metrics = [];
 
-        if(count($this->points)) {
+        if (count($this->points)) {
             $this->getWriteConnection()->writePoints($this->points);
             $this->points = [];
         }
@@ -149,14 +147,15 @@ class InfluxDB extends AbstractDriver implements HandlesMetrics
      * Send one or more metrics to InfluxDB now
      *
      * @param $metrics
+     *
      * @throws \InfluxDB\Exception
      */
     public function send($metrics)
     {
         $this->getWriteConnection()->writePoints(
-            array_map(function($metric) {
+            array_map(function ($metric) {
                 return $this->format($metric);
-            }, (array) $metrics)
+            }, (array)$metrics)
         );
     }
 

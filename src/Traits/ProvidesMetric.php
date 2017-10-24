@@ -1,4 +1,5 @@
 <?php
+
 namespace STS\Metrics\Traits;
 
 use STS\Metrics\Metric;
