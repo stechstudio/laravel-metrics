@@ -140,7 +140,7 @@ class OrderPlaced implements ShouldReportMetric {
     
     public function createMetric()
     {
-        return (new Metric('order_placed', 1));
+        return new Metric('order_placed', 1);
     }
 }
 ```
