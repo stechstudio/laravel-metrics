@@ -49,14 +49,14 @@ class Metric
      *
      * @param $name
      * @param $value
-     * @param $creator
+     * @param $driver
      */
-    public function __construct($name = null, $value = null, $creator = null)
+    public function __construct($name = null, $value = null, $driver = null)
     {
         $this->setName($name);
         $this->setValue($value);
 
-        $this->driver = $creator;
+        $this->driver = $driver;
     }
 
     /**
