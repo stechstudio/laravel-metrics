@@ -4,14 +4,13 @@ namespace STS\Metrics\Drivers;
 
 use InfluxDB\Database;
 use InfluxDB\Point;
-use STS\Metrics\Contracts\HandlesMetrics;
 use STS\Metrics\Metric;
 
 /**
  * Class InfluxDB
  * @package STS\Metrics\Drivers
  */
-class InfluxDB extends AbstractDriver implements HandlesMetrics
+class InfluxDB extends AbstractDriver
 {
     /**
      * @var Database
@@ -50,7 +49,7 @@ class InfluxDB extends AbstractDriver implements HandlesMetrics
     }
 
     /**
-     * Queue up a new point
+     * Queue up a new measurement
      *
      * @param string $measurement the name of the measurement ... 'this-data'
      * @param mixed  $value       measurement value ... 15
@@ -60,15 +59,27 @@ class InfluxDB extends AbstractDriver implements HandlesMetrics
      *
      * @return $this
      */
-    public function point($measurement, $value = null, array $tags = [], array $fields = [], $timestamp = null)
+    public function measurement($measurement, $value = null, array $tags = [], array $fields = [], $timestamp = null)
     {
-        $this->points[] = new Point(
+        return $this->point(new Point(
             $measurement,
             $value,
             array_merge($this->tags, $tags),
             array_merge($this->extra, $fields),
             $this->getNanoSecondTimestamp($timestamp)
-        );
+        ));
+    }
+
+    /**
+     * Queue up a new point
+     *
+     * @param Point $point
+     *
+     * @return $this
+     */
+    public function point(Point $point)
+    {
+        $this->points[] = $point;
 
         return $this;
     }

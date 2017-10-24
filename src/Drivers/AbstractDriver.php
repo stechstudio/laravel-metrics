@@ -46,6 +46,8 @@ abstract class AbstractDriver
      */
     public function add(Metric $metric)
     {
+        $metric->setDriver($this);
+
         $this->metrics[] = $metric;
 
         return $this;
@@ -86,4 +88,16 @@ abstract class AbstractDriver
 
         return $this;
     }
+
+    /**
+     * @param Metric $metric
+     *
+     * @return mixed
+     */
+    public abstract function format(Metric $metric);
+
+    /**
+     * @return $this
+     */
+    public abstract function flush();
 }

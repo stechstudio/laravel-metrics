@@ -2,7 +2,7 @@
 
 namespace STS\Metrics;
 
-use STS\Metrics\Contracts\HandlesMetrics;
+use STS\Metrics\Drivers\AbstractDriver;
 use STS\Metrics\MetricsFacade as Metrics;
 
 /**
@@ -12,9 +12,9 @@ use STS\Metrics\MetricsFacade as Metrics;
 class Metric
 {
     /**
-     * @var HandlesMetrics
+     * @var AbstractDriver
      */
-    protected $creator;
+    protected $driver;
     /**
      * @var
      */
@@ -56,7 +56,7 @@ class Metric
         $this->setName($name);
         $this->setValue($value);
 
-        $this->creator = $creator;
+        $this->driver = $creator;
     }
 
     /**
@@ -222,10 +222,38 @@ class Metric
      */
     public function add()
     {
-        if ($this->creator) {
-            return $this->creator->add($this);
-        }
+        $this->getDriver()->add($this);
+    }
 
-        return Metrics::add($this);
+    /**
+     * Return our own driver if we have one, otherwise our Metrics default driver
+     *
+     * @return AbstractDriver
+     */
+    public function getDriver()
+    {
+        return $this->driver
+            ? $this->driver
+            : Metrics::driver();
+    }
+
+    /**
+     * @param AbstractDriver $driver
+     *
+     * @return $this
+     */
+    public function setDriver(AbstractDriver $driver)
+    {
+        $this->driver = $driver;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function format()
+    {
+        return $this->getDriver()->format($this);
     }
 }

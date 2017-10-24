@@ -3,14 +3,13 @@
 namespace STS\Metrics\Drivers;
 
 use Aws\CloudWatch\CloudWatchClient;
-use STS\Metrics\Contracts\HandlesMetrics;
 use STS\Metrics\Metric;
 
 /**
  * Class CloudWatch
  * @package STS\Metrics\Drivers
  */
-class CloudWatch extends AbstractDriver implements HandlesMetrics
+class CloudWatch extends AbstractDriver
 {
     /**
      * @var CloudWatchClient
