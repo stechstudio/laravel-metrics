@@ -62,6 +62,14 @@ METRICS_BACKEND=cloudwatch
 CLOUDWATCH_NAMESPACE=...
 ```
 
+### Null (for development)
+
+If you need to disable metrics just set the backend to null:
+
+```
+METRICS_BACKEND=null
+```
+
 ## Sending an individual metric
 
 You can create metric by using the facade like this:

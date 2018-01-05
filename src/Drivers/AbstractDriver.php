@@ -94,10 +94,10 @@ abstract class AbstractDriver
      *
      * @return mixed
      */
-    public abstract function format(Metric $metric);
+    abstract public function format(Metric $metric);
 
     /**
      * @return $this
      */
-    public abstract function flush();
+    abstract public function flush();
 }
