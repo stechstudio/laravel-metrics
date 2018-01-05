@@ -62,13 +62,15 @@ METRICS_BACKEND=cloudwatch
 CLOUDWATCH_NAMESPACE=...
 ```
 
-### Null (for development)
+### NullDriver (for development)
 
 If you need to disable metrics just set the backend to null:
 
 ```
 METRICS_BACKEND=null
 ```
+
+This `null` driver will simply discard any metrics. 
 
 ## Sending an individual metric
 

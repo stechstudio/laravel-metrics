@@ -8,7 +8,7 @@ use STS\Metrics\Metric;
  * Class Null
  * @package STS\Metrics\Drivers
  */
-class Null extends AbstractDriver
+class NullDriver extends AbstractDriver
 {
     /**
      * @return $this

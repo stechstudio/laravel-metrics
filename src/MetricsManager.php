@@ -5,7 +5,7 @@ namespace STS\Metrics;
 use Illuminate\Support\Manager;
 use STS\Metrics\Drivers\CloudWatch;
 use STS\Metrics\Drivers\InfluxDB;
-use STS\Metrics\Drivers\Null;
+use STS\Metrics\Drivers\NullDriver;
 
 /**
  * Class MetricsManager
@@ -18,7 +18,9 @@ class MetricsManager extends Manager
      */
     public function getDefaultDriver()
     {
-        return $this->app['config']['metrics.default'];
+        return $this->app['config']['metrics.default'] == null
+            ? 'null'
+            : $this->app['config']['metrics.default'];
     }
 
     /**
@@ -42,6 +44,6 @@ class MetricsManager extends Manager
      */
     public function createNullDriver()
     {
-        return new Null();
+        return new NullDriver();
     }
 }
