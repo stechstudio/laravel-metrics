@@ -5,6 +5,7 @@ namespace STS\Metrics;
 use Illuminate\Support\Manager;
 use STS\Metrics\Drivers\CloudWatch;
 use STS\Metrics\Drivers\InfluxDB;
+use STS\Metrics\Drivers\Null;
 
 /**
  * Class MetricsManager
@@ -34,5 +35,13 @@ class MetricsManager extends Manager
     public function createCloudwatchDriver()
     {
         return $this->app->make(CloudWatch::class);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function createNullDriver()
+    {
+        return new Null();
     }
 }
