@@ -22,6 +22,21 @@ class CloudWatchDriverTest extends TestCase
         $this->assertEquals('Megabytes', $formatted['Unit']);
     }
 
+    public function testDefaultTimestampFormatting()
+    {
+        $this->setupCloudWatch();
+
+        $metric = (new \STS\Metrics\Metric("file_uploaded"))
+            ->setResolution(1)
+            ->setValue(50)
+            ->setUnit('Megabytes')
+            ->setTags(['user' => 54]);
+
+        Metrics::add($metric);
+
+        $this->assertTrue(is_int(Metrics::format($metric)['Timestamp']));
+    }
+
     public function testDefaultTagsExtra()
     {
         $this->setupCloudWatch();

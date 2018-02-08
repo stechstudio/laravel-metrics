@@ -34,7 +34,7 @@ abstract class AbstractDriver
     public function create($name, $value = null)
     {
         $metric = new Metric($name, $value, $this);
-        $this->metrics[] = &$metric;
+        $this->add($metric);
 
         return $metric;
     }
@@ -47,6 +47,10 @@ abstract class AbstractDriver
     public function add(Metric $metric)
     {
         $metric->setDriver($this);
+
+        if($metric->getTimestamp() == null) {
+            $metric->setTimestamp(new \DateTime);
+        }
 
         $this->metrics[] = $metric;
 

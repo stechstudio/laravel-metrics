@@ -29,4 +29,38 @@ class MetricTest extends TestCase
         $this->assertEquals(1, count($GLOBALS['points']));
         $this->assertEquals("my_metric", $GLOBALS['points'][0]->getMeasurement());
     }
+
+    public function testDefaultTimestampWhenAdding()
+    {
+        $metric = new \STS\Metrics\Metric('my_metric', 1);
+
+        $this->assertNull($metric->getTimestamp());
+
+        Metrics::add($metric);
+
+        $this->assertInstanceOf(\DateTime::class, $metric->getTimestamp());
+    }
+
+    public function testDefaultTimestampWhenCreatingFromDriver()
+    {
+        Metrics::create("my_metric")
+            ->setValue(5)
+            ->setTags(['foo' => 'bar']);
+
+        $this->assertInstanceOf(\DateTime::class, Metrics::getMetrics()[0]->getTimestamp());
+    }
+
+    public function testGivenTimestampIsntChanged()
+    {
+        $metric = new \STS\Metrics\Metric('my_metric', 1);
+        $time = time();
+
+        $metric->setTimestamp($time);
+
+        $this->assertEquals($time, $metric->getTimestamp());
+
+        Metrics::add($metric);
+
+        $this->assertEquals($time, $metric->getTimestamp());
+    }
 }

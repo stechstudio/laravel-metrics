@@ -93,10 +93,35 @@ class CloudWatch extends AbstractDriver
             'MetricName'        => $metric->getName(),
             'Dimensions'        => array_merge($this->tags, $metric->getTags()),
             'StorageResolution' => in_array($metric->getResolution(), [1, 60]) ? $metric->getResolution() : null,
-            'Timestamp'         => $metric->getTimestamp(),
+            'Timestamp'         => $this->formatTimestamp($metric->getTimestamp()),
             'Unit'              => $metric->getUnit(),
             'Value'             => $metric->getValue()
         ]);
+    }
+
+    /**
+     * @param $timestamp
+     *
+     * @return int
+     */
+    protected function formatTimestamp($timestamp)
+    {
+        if (is_numeric($timestamp) && strlen($timestamp) == 10) {
+            // This appears to be in seconds already
+            return $timestamp;
+        }
+
+        if ($timestamp instanceof \DateTime) {
+            return $timestamp->getTimestamp();
+        }
+
+        if (preg_match("/\d{10}\.\d{4}/", $timestamp)) {
+            // This looks like a microtime float
+            return (int)$timestamp;
+        }
+
+        // I don't know what you have, just going to generate a new timestamp
+        return time();
     }
 
     /**

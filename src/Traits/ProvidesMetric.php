@@ -81,7 +81,7 @@ trait ProvidesMetric
     {
         return property_exists($this, 'metricTimestamp')
             ? $this->metricTimestamp
-            : null;
+            : new \DateTime;
     }
 
     /**
