@@ -120,11 +120,11 @@ class MetricsServiceProvider extends ServiceProvider
 
         $udpConnection = (array_has($config, 'udp_port') && !empty($config['udp_port']))
             ? Client::fromDSN(sprintf('udp+influxdb://%s:%s@%s:%s/%s',
-                $config['username'],
-                $config['password'],
+                array_get($config, 'username', 'default'), // Not required for UDP
+                array_get($config, 'password', 'default'), // Not required for UDP
                 $config['host'],
                 $config['udp_port'],
-                $config['database']
+                array_get($config, 'database', 'default') // Not required for UDP
             ))
             : null;
 
