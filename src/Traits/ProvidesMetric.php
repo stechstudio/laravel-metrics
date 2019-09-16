@@ -2,6 +2,7 @@
 
 namespace STS\Metrics\Traits;
 
+use Illuminate\Support\Str;
 use STS\Metrics\Metric;
 
 /**
@@ -31,7 +32,7 @@ trait ProvidesMetric
     {
         return property_exists($this, 'metricName')
             ? $this->metricName
-            : snake_case((new \ReflectionClass($this))->getShortName());
+            : Str::snake((new \ReflectionClass($this))->getShortName());
     }
 
     /**
