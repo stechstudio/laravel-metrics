@@ -3,6 +3,7 @@
 namespace STS\Metrics;
 
 use Aws\Sdk;
+use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
 use InfluxDB\Client;
 use STS\Metrics\Contracts\ShouldReportMetric;
@@ -118,13 +119,13 @@ class MetricsServiceProvider extends ServiceProvider
             )
         );
 
-        $udpConnection = (array_has($config, 'udp_port') && !empty($config['udp_port']))
+        $udpConnection = (Arr::has($config, 'udp_port') && !empty($config['udp_port']))
             ? Client::fromDSN(sprintf('udp+influxdb://%s:%s@%s:%s/%s',
-                array_get($config, 'username', 'default'), // Not required for UDP
-                array_get($config, 'password', 'default'), // Not required for UDP
+                Arr::get($config, 'username', 'default'), // Not required for UDP
+                Arr::get($config, 'password', 'default'), // Not required for UDP
                 $config['host'],
                 $config['udp_port'],
-                array_get($config, 'database', 'default') // Not required for UDP
+                Arr::get($config, 'database', 'default') // Not required for UDP
             ))
             : null;
 
