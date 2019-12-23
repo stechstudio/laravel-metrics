@@ -61,4 +61,16 @@ class CloudWatchDriverTest extends TestCase
         // This call passes through our driver to the underlying influx CloudWatchClient class
         $this->assertInstanceOf(\Aws\Api\Service::class, $driver->getApi());
     }
+
+    public function testZeroValue()
+    {
+        $this->setupCloudWatch();
+
+        $metric = (new \STS\Metrics\Metric("file_uploaded"))
+            ->setValue(0);
+
+        $formatted = app(CloudWatch::class)->format($metric);
+
+        $this->assertEquals(0, $formatted['Value']);
+    }
 }
