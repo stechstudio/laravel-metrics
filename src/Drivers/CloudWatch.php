@@ -89,14 +89,17 @@ class CloudWatch extends AbstractDriver
      */
     public function format(Metric $metric)
     {
-        return array_filter([
-            'MetricName'        => $metric->getName(),
-            'Dimensions'        => array_merge($this->tags, $metric->getTags()),
-            'StorageResolution' => in_array($metric->getResolution(), [1, 60]) ? $metric->getResolution() : null,
-            'Timestamp'         => $this->formatTimestamp($metric->getTimestamp()),
-            'Unit'              => $metric->getUnit(),
-            'Value'             => $metric->getValue()
-        ]);
+        return array_merge(
+            array_filter([
+                'MetricName'        => $metric->getName(),
+                'Dimensions'        => array_merge($this->tags, $metric->getTags()),
+                'StorageResolution' => in_array($metric->getResolution(), [1, 60]) ? $metric->getResolution() : null,
+                'Timestamp'         => $this->formatTimestamp($metric->getTimestamp()),
+                'Unit'              => $metric->getUnit()
+            ]), 
+            [
+                'Value'             => $metric->getValue()
+            ]);
     }
 
     /**
