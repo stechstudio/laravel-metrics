@@ -3,7 +3,7 @@ class TestCase extends Orchestra\Testbench\TestCase
 {
     protected function getPackageProviders($app)
     {
-        return ['STS\Metrics\MetricsServiceProvider', 'Aws\Laravel\AwsServiceProvider'];
+        return ['STS\Metrics\MetricsServiceProvider'];
     }
 
     protected function getPackageAliases($app)
@@ -39,15 +39,8 @@ class TestCase extends Orchestra\Testbench\TestCase
     {
         app('config')->set('metrics.default', 'cloudwatch');
         app('config')->set('metrics.backends.cloudwatch.namespace', 'Testing');
-
-        app('config')->set('aws', [
-            'credentials' => [
-                'key' => 'key',
-                'secret' => 'secret'
-            ],
-            'region' => 'us-east-1',
-            'version' => 'latest'
-        ]);
+        app('config')->set('metrics.backends.cloudwatch.key', 'Testing');
+        app('config')->set('metrics.backends.cloudwatch.secret', 'Testing');
 
         if($mock) {
             $mock = Mockery::mock(\Aws\CloudWatch\CloudWatchClient::class)->makePartial();

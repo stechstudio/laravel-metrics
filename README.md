@@ -53,13 +53,17 @@ IDB_UDP_PORT=...
 
 ### CloudWatch
 
-First make sure you have AWS itself properly setup. That means installing [`aws-sdk-php-laravel`](https://github.com/aws/aws-sdk-php-laravel) and following the configuration instructions for that package.
+First make sure you have AWS itself properly setup. That means `composer install aws/aws-sdk-php` and making sure you have your AWS credentials configured.
  
 From there, you simply need to add:
 
 ```
 METRICS_BACKEND=cloudwatch
 CLOUDWATCH_NAMESPACE=...
+
+AWS_DEFAULT_REGION=...
+AWS_ACCESS_KEY_ID=...
+AWS_SECRET_ACCESS_KEY=...
 ```
 
 ### NullDriver (for development)

@@ -2,6 +2,7 @@
 
 namespace STS\Metrics;
 
+use Aws\CloudWatch\CloudWatchClient;
 use Aws\Sdk;
 use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
@@ -142,7 +143,14 @@ class MetricsServiceProvider extends ServiceProvider
     protected function createCloudWatchDriver(array $config)
     {
         return new CloudWatch(
-            app(Sdk::class)->createClient('cloudwatch'), $config['namespace']
+            new CloudWatchClient([
+                'region'      => Arr::get($config, 'region'),
+                'version'     => '2010-08-01',
+                'credentials' => [
+                    'key'    => Arr::get($config, 'key'),
+                    'secret' => Arr::get($config, 'secret')
+                ]
+            ]), $config['namespace']
         );
     }
 }
