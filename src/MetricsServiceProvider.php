@@ -142,15 +142,22 @@ class MetricsServiceProvider extends ServiceProvider
      */
     protected function createCloudWatchDriver(array $config)
     {
-        return new CloudWatch(
-            new CloudWatchClient([
-                'region'      => Arr::get($config, 'region'),
-                'version'     => '2010-08-01',
-                'credentials' => [
-                    'key'    => Arr::get($config, 'key'),
-                    'secret' => Arr::get($config, 'secret')
-                ]
-            ]), $config['namespace']
-        );
+        $opts = [
+            'region'  => Arr::get($config, 'region'),
+            'version' => '2010-08-01',
+        ];
+
+        // Add credentials if they've been defined, else fallback to loading
+        // credentials from the environment.
+        $key = Arr::get($config, 'key');
+        $secret = Arr::get($config, 'secret');
+        if ($key !== null && $secret !== null) {
+            $opts['credentials'] = [
+                'key'    => $key,
+                'secret' => $secret,
+            ];
+        }
+
+        return new CloudWatch(new CloudWatchClient($opts), $config['namespace']);
     }
 }
