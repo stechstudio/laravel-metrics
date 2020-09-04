@@ -25,7 +25,7 @@ class CloudWatchEventListeningTest extends TestCase
         /** @var \InfluxDB\Point $metric */
         $metric = $GLOBALS['metrics']['MetricData'][0];
         $this->assertEquals("order_placed", $metric['MetricName']);
-        $this->assertEquals("email", $metric['Dimensions']['source']);
+        $this->assertEquals("email", $metric['Dimensions'][0]['Value']);
         $this->assertEquals(1508701523, $metric['Timestamp']);
     }
 
@@ -38,7 +38,7 @@ class CloudWatchEventListeningTest extends TestCase
         $metric = $GLOBALS['metrics']['MetricData'][0];
         $this->assertEquals("user_registered", $metric['MetricName']);
         $this->assertEquals("1", $metric['Value']);
-        $this->assertEquals(false, $metric['Dimensions']['admin']);
+        $this->assertEquals(false, $metric['Dimensions'][0]['Value']);
         $this->assertEquals(1508702054, $metric['Timestamp']);
     }
 }
