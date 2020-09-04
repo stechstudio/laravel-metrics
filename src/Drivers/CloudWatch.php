@@ -92,13 +92,13 @@ class CloudWatch extends AbstractDriver
         return array_merge(
             array_filter([
                 'MetricName'        => $metric->getName(),
-                'Dimensions'        => array_merge($this->tags, $metric->getTags()),
+                'Dimensions'        => $this->formatDimensions(array_merge($this->tags, $metric->getTags())),
                 'StorageResolution' => in_array($metric->getResolution(), [1, 60]) ? $metric->getResolution() : null,
                 'Timestamp'         => $this->formatTimestamp($metric->getTimestamp()),
                 'Unit'              => $metric->getUnit()
-            ]), 
+            ]),
             [
-                'Value'             => $metric->getValue()
+                'Value' => $metric->getValue()
             ]);
     }
 
@@ -125,6 +125,16 @@ class CloudWatch extends AbstractDriver
 
         // I don't know what you have, just going to generate a new timestamp
         return time();
+    }
+
+    protected function formatDimensions(array $dimensions)
+    {
+        return array_map(function ($key, $value) {
+            return [
+                'Name' => $key,
+                'Value' => $value
+            ];
+        }, array_keys($dimensions), $dimensions);
     }
 
     /**
