@@ -17,7 +17,7 @@ class CloudWatchDriverTest extends TestCase
 
         $this->assertEquals("file_uploaded", $formatted['MetricName']);
         $this->assertEquals(50, $formatted['Value']);
-        $this->assertEquals(54, $formatted['Dimensions']['user']);
+        $this->assertEquals(54, $formatted['Dimensions'][0]['Value']);
         $this->assertEquals(1, $formatted['StorageResolution']);
         $this->assertEquals('Megabytes', $formatted['Unit']);
     }
@@ -50,7 +50,10 @@ class CloudWatchDriverTest extends TestCase
         $formatted = $driver->format($metric);
 
         $this->assertCount(2, $formatted['Dimensions']);
-        $this->assertEquals("tag_value", $formatted['Dimensions']['tag1']);
+        $this->assertEquals("tag1", $formatted['Dimensions'][0]['Name']);
+        $this->assertEquals("tag_value", $formatted['Dimensions'][0]['Value']);
+        $this->assertEquals("foo", $formatted['Dimensions'][1]['Name']);
+        $this->assertEquals("bar", $formatted['Dimensions'][1]['Value']);
     }
 
     public function testPassthru()
