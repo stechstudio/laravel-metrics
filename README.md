@@ -17,20 +17,6 @@ You know the drill...
 composer require stechstudio/laravel-metrics
 ```
 
-If you're running Laravel 5.5, you're done. For Laravel 5.4 and earlier, add the following service provider and facade to `config/app.php`:
-
-```php
-'providers' => [
-    ...
-    STS\Metrics\MetricsServiceProvider::class,
-],
-
-'aliases' => [
-    ..
-    'Metrics' => STS\Metrics\MetricsFacade::class,
-],
-```
-
 ## Backend configuration
 
 ### InfluxDB
