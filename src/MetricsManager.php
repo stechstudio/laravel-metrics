@@ -18,9 +18,9 @@ class MetricsManager extends Manager
      */
     public function getDefaultDriver()
     {
-        return $this->app['config']['metrics.default'] == null
+        return $this->container['config']['metrics.default'] == null
             ? 'null'
-            : $this->app['config']['metrics.default'];
+            : $this->container['config']['metrics.default'];
     }
 
     /**
@@ -28,7 +28,7 @@ class MetricsManager extends Manager
      */
     public function createInfluxdbDriver()
     {
-        return $this->app->make(InfluxDB::class);
+        return $this->container->make(InfluxDB::class);
     }
 
     /**
@@ -36,7 +36,7 @@ class MetricsManager extends Manager
      */
     public function createCloudwatchDriver()
     {
-        return $this->app->make(CloudWatch::class);
+        return $this->container->make(CloudWatch::class);
     }
 
     /**
