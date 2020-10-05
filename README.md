@@ -1,9 +1,9 @@
 # Laravel Metrics
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/stechstudio/laravel-metrics.svg?style=flat-square)](https://packagist.org/packages/stechstudio/laravel-metrics)
+[![Total Downloads](https://img.shields.io/packagist/dt/stechstudio/laravel-metrics.svg?style=flat-square)](https://packagist.org/packages/stechstudio/laravel-metrics)
 [![Build Status](https://img.shields.io/travis/stechstudio/laravel-metrics/master.svg?style=flat-square)](https://travis-ci.org/stechstudio/laravel-metrics)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Quality Score](https://img.shields.io/scrutinizer/g/stechstudio/laravel-metrics.svg?style=flat-square)](https://scrutinizer-ci.com/g/stechstudio/laravel-metrics)
-[![Total Downloads](https://img.shields.io/packagist/dt/stechstudio/laravel-metrics.svg?style=flat-square)](https://packagist.org/packages/stechstudio/laravel-metrics)
 
 This package makes it incredibly easy to ship app metrics to backends such as InfluxDB or CloudWatch.
 
