@@ -51,4 +51,19 @@ class TestCase extends Orchestra\Testbench\TestCase
             Metrics::setClient($mock);
         }
     }
+
+    protected function setupLogDriver($config = [], $mock = true)
+    {
+        app('config')->set('metrics.default', 'log');
+
+        if ($mock) {
+            $mock = Mockery::mock(\Monolog\Logger::class)->makePartial();
+            $mock->shouldRecive('info')
+            ->andReturnUsing(function ($args) {
+                $GLOBALS['metrics'] = $args;
+            });
+            Metrics::setClient($mock);
+        }
+    }
+
 }
