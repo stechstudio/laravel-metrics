@@ -15,6 +15,8 @@
     ],
     "require": {
         "illuminate/support": "^5.6|^6.0|^7.0|^8.0|^9.0|^10.0",
+        "influxdata/influxdb-client-php": "^3.2",
+        "guzzlehttp/guzzle": "^7.5",
         "influxdb/influxdb-php": "^1.14"
     },
     "require-dev": {
@@ -42,6 +44,11 @@
             "aliases": {
                 "Metrics": "STS\\Metrics\\MetricsFacade"
             }
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
         }
     }
 }
