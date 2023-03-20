@@ -13,6 +13,8 @@ use STS\Metrics\Drivers\InfluxDB;
 use STS\Metrics\Drivers\InfluxDB2;
 use Illuminate\Foundation\Application as LaravelApplication;
 use Laravel\Lumen\Application as LumenApplication;
+use STS\Metrics\Adapters\InfluxDB1Adapter;
+use STS\Metrics\Adapters\InfluxDB2Adapter;
 
 /**
  * Class MetricsServiceProvider
@@ -115,6 +117,38 @@ class MetricsServiceProvider extends ServiceProvider
      */
     protected function createInfluxDBDriver(array $config)
     {
+        $version = Arr::get($config, 'version', 2);
+
+        if ($version == 2) {
+            return new InfluxDB($this->createInfluxDB2Adapter($config));
+        }
+
+        return new InfluxDB($this->createInfluxDBAdapter($config));
+    }
+
+    /**
+     * @return InfluxDB2Adapter
+     */
+    protected function createInfluxDB2Adapter(array $config)
+    {
+        return new InfluxDB2Adapter(
+            new \InfluxDB2\Client([
+                'url' => sprintf("%s:%s",
+                    $config['host'],
+                    $config['tcp_port']
+                ),
+                'token' => $config['token'],
+                'bucket' => $config['database'],
+                'udpPort' => $config['udp_port'],
+            ])
+        );
+    }
+
+    /**
+     * @return InfluxDB1Adapter
+     */
+    protected function createInfluxDBAdapter(array $config)
+    {
         $tcpConnection = Client::fromDSN(
             sprintf('influxdb://%s:%s@%s:%s/%s',
                 $config['username'],
@@ -135,7 +169,10 @@ class MetricsServiceProvider extends ServiceProvider
             ))
             : null;
 
-        return new InfluxDB($tcpConnection, $udpConnection);
+        return new InfluxDB1Adapter(
+            $tcpConnection,
+            $udpConnection
+        );
     }
 
     /**

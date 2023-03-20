@@ -1,10 +1,7 @@
 <?php
 
-use InfluxDB2\Model\WritePrecision;
-
 return [
     'default' => env('METRICS_BACKEND'),
-
     'backends' => [
         'influxdb' => [
             'username' => env('IDB_USERNAME'),
@@ -13,7 +10,8 @@ return [
             'database' => env('IDB_DATABASE'),
             'tcp_port' => env('IDB_TCP_PORT', 8086),
             'udp_port' => env('IDB_UDP_PORT'),
-            'version' => env('IDB_VERSION', 2)
+            'version' => env('IDB_VERSION', 2),
+            'token' => env('IDB_TOKEN'),
         ],
         'cloudwatch' => [
             'region' => env('CLOUDWATCH_REGION', env('AWS_DEFAULT_REGION', 'us-east-1')),
