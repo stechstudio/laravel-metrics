@@ -1,6 +1,6 @@
 <?php
 
-namespace STS\Traits;
+namespace STS\Metrics\Traits;
 
 trait ComputesNanosecondTimestamps
 {

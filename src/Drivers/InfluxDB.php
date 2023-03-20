@@ -5,7 +5,7 @@ namespace STS\Metrics\Drivers;
 use InfluxDB\Database;
 use InfluxDB\Point;
 use STS\Metrics\Metric;
-use STS\Traits\ComputesNanosecondTimestamps;
+use STS\Metrics\Traits\ComputesNanosecondTimestamps;
 
 /**
  * Class InfluxDB
