@@ -2,8 +2,6 @@
 
 namespace STS\Metrics\Drivers;
 
-use InfluxDB2\Client;
-use InfluxDB2\Model\WritePrecision;
 use InfluxDB2\Point;
 use InfluxDB2\WriteApi;
 use STS\Metrics\Metric;
