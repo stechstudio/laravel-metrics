@@ -13,7 +13,7 @@ return [
         ],
         'influxdb2' => [
             'url' => env('IDB2_HOST'),
-            'token' => env('IDB2_HOST'),
+            'token' => env('IDB2_TOKEN'),
             'org' => env('IDB2_ORG'),
             'bucket' => env('IDB2_BUCKET'),
             'debug' => env('IDB2_DEBUG', false)
