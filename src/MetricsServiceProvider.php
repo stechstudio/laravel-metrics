@@ -12,6 +12,7 @@ use STS\Metrics\Drivers\CloudWatch;
 use STS\Metrics\Drivers\InfluxDB;
 use STS\Metrics\Drivers\InfluxDB2;
 use Illuminate\Foundation\Application as LaravelApplication;
+use InfluxDB2\Model\WritePrecision;
 use Laravel\Lumen\Application as LumenApplication;
 use STS\Metrics\Adapters\InfluxDB1Adapter;
 use STS\Metrics\Adapters\InfluxDB2Adapter;
@@ -138,6 +139,8 @@ class MetricsServiceProvider extends ServiceProvider
             ),
             'token' => $config['token'],
             'bucket' => $config['database'],
+            'org' => $config['org'],
+            'precision' => WritePrecision::NS
         ];
 
         if ($udpPort = Arr::get($config, 'udp_port', null)) {

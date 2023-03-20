@@ -12,6 +12,7 @@ return [
             'udp_port' => env('IDB_UDP_PORT'),
             'version' => env('IDB_VERSION', 2),
             'token' => env('IDB_TOKEN'),
+            'org' => env('IDB_ORG')
         ],
         'cloudwatch' => [
             'region' => env('CLOUDWATCH_REGION', env('AWS_DEFAULT_REGION', 'us-east-1')),
