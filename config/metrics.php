@@ -12,14 +12,8 @@ return [
             'host' => env('IDB_HOST'),
             'database' => env('IDB_DATABASE'),
             'tcp_port' => env('IDB_TCP_PORT', 8086),
-            'udp_port' => env('IDB_UDP_PORT')
-        ],
-        'influxdb2' => [
-            'url' => env('IDB2_HOST'),
-            'token' => env('IDB2_TOKEN'),
-            'org' => env('IDB2_ORG'),
-            'bucket' => env('IDB2_BUCKET'),
-            'precision' => WritePrecision::NS,
+            'udp_port' => env('IDB_UDP_PORT'),
+            'version' => env('IDB_VERSION', 2)
         ],
         'cloudwatch' => [
             'region' => env('CLOUDWATCH_REGION', env('AWS_DEFAULT_REGION', 'us-east-1')),
