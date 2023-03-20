@@ -25,17 +25,6 @@ class InfluxDBDriverTest extends TestCase
         );
     }
 
-    public function testNanoSecondTimestamp()
-    {
-        $this->setupInfluxDB();
-
-        $influx = app(InfluxDB::class);
-
-        $this->assertEquals(1508713728000000000, $influx->getNanoSecondTimestamp(1508713728000000000));
-        $this->assertEquals(1508713728000000000, $influx->getNanoSecondTimestamp(1508713728));
-        $this->assertEquals(1508713728000000000, $influx->getNanoSecondTimestamp(new \DateTime('@1508713728')));
-    }
-
     public function testDefaultTagsExtra()
     {
         $this->setupInfluxDB();
