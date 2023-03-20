@@ -131,16 +131,22 @@ class MetricsServiceProvider extends ServiceProvider
      */
     protected function createInfluxDB2Adapter(array $config)
     {
+        $opts = [
+            'url' => sprintf("%s:%s",
+                $config['host'],
+                $config['tcp_port']
+            ),
+            'token' => $config['token'],
+            'bucket' => $config['database'],
+        ];
+
+        if ($udpPort = Arr::get($config, 'udp_port', null)) {
+            $opts['udpPort'] = $udpPort;
+        }
+
         return new InfluxDB2Adapter(
-            new \InfluxDB2\Client([
-                'url' => sprintf("%s:%s",
-                    $config['host'],
-                    $config['tcp_port']
-                ),
-                'token' => $config['token'],
-                'bucket' => $config['database'],
-                'udpPort' => $config['udp_port'],
-            ])
+            new \InfluxDB2\Client($opts),
+            ! empty($udpPort)
         );
     }
 
