@@ -59,7 +59,7 @@ class MetricsServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['metrics', MetricsManager::class, InfluxDB::class, InfluxDB2::class, CloudWatch::class];
+        return ['metrics', MetricsManager::class, InfluxDB::class, CloudWatch::class];
     }
 
     /**
@@ -136,13 +136,6 @@ class MetricsServiceProvider extends ServiceProvider
             : null;
 
         return new InfluxDB($tcpConnection, $udpConnection);
-    }
-
-    protected function createInfluxDB2Driver(array $config)
-    {
-        return new InfluxDB2(
-            new \InfluxDB2\Client($config)
-        );
     }
 
     /**

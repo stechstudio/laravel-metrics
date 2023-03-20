@@ -32,11 +32,6 @@ class MetricsManager extends Manager
         return $this->container->make(InfluxDB::class);
     }
 
-    public function createInfluxdb2Driver()
-    {
-        return $this->container->make(InfluxDB2::class);
-    }
-
     /**
      * @return mixed
      */
