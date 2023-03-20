@@ -84,7 +84,7 @@ class InfluxDB extends AbstractDriver
         $this->metrics = [];
 
         if (count($this->points)) {
-            $this->adapter->getWriteConnection()->writePoints($this->points);
+            $this->adapter->writePoints($this->points);
             $this->points = [];
         }
 
@@ -117,7 +117,7 @@ class InfluxDB extends AbstractDriver
      */
     public function send($metrics)
     {
-        $this->adapter->getWriteConnection()->writePoints(
+        $this->adapter->writePoints(
             array_map(function ($metric) {
                 return $this->format($metric);
             }, (array)$metrics)
