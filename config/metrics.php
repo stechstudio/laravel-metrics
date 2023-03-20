@@ -1,4 +1,7 @@
 <?php
+
+use InfluxDB2\Model\WritePrecision;
+
 return [
     'default' => env('METRICS_BACKEND'),
 
@@ -16,6 +19,7 @@ return [
             'token' => env('IDB2_TOKEN'),
             'org' => env('IDB2_ORG'),
             'bucket' => env('IDB2_BUCKET'),
+            'precision' => env('IDB2_PRECISION', WritePrecision::NS),
             'debug' => env('IDB2_DEBUG', false)
         ],
         'cloudwatch' => [
