@@ -21,6 +21,7 @@ class TestCase extends Orchestra\Testbench\TestCase
             'password' => 'bar',
             'host' => 'localhost',
             'database' => 'baz',
+            'version'  => 1,
             'tcp_port' => 8086
         ], $config));
 
