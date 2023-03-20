@@ -25,7 +25,7 @@ class InfluxDB2 extends AbstractDriver
      */
     protected $writeConnection;
 
-    protected $points;
+    protected $points = [];
 
     /**
      * InfluxDB2 constructor.
