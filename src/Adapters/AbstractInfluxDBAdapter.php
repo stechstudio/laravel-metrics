@@ -18,16 +18,6 @@ abstract class AbstractInfluxDBAdapter
     protected $writeConnection;
 
     /**
-     * @param \InfluxDB\Database|\InfluxDB2\QueryApi $readConnection
-     * @param \InfluxDB\Database|\InfluxDB2\WriteApi|\InfluxDB2\UdpWriter $writeConnection
-     */
-    public function __construct($readConnection, $writeConnection)
-    {
-        $this->readConnection = $readConnection;
-        $this->writeConnection = $writeConnection;
-    }
-
-    /**
      * @return \InfluxDB\Database|\InfluxDB2\QueryApi
      */
     public function getReadConnection()
