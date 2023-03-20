@@ -59,7 +59,7 @@ class MetricsServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['metrics', MetricsManager::class, InfluxDB::class, CloudWatch::class];
+        return ['metrics', MetricsManager::class, InfluxDB::class, InfluxDB2::class, CloudWatch::class];
     }
 
     /**
