@@ -88,5 +88,5 @@ abstract class AbstractInfluxDBAdapter
      * @param string $precision
      * @return bool
      */
-    abstract public function writePoints($points, $precision);
+    abstract public function writePoints($points, $precision = null);
 }
