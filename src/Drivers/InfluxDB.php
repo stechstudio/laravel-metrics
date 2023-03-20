@@ -4,37 +4,23 @@ namespace STS\Metrics\Drivers;
 
 use InfluxDB\Database;
 use InfluxDB\Point;
+use STS\Metrics\Adapters\AbstractInfluxDBAdapter;
 use STS\Metrics\Metric;
-use STS\Metrics\Traits\ComputesNanosecondTimestamps;
 
 /**
  * Class InfluxDB
  * @package STS\Metrics\Drivers
  */
 class InfluxDB extends AbstractDriver
-{
-    use ComputesNanosecondTimestamps;
-
-    /**
-     * @var Database
-     */
-    protected $readConnection;
-    /**
-     * @var Database
-     */
-    protected $writeConnection;
+{   
     /**
      * @var array
      */
     protected $points = [];
     /**
-     * @var Database
+     * @var AbstractInfluxDBAdapter
      */
-    protected $tcpConnection;
-    /**
-     * @var Database
-     */
-    protected $udpConnection;
+    protected $adapter;
 
     /**
      * InfluxDB constructor.
@@ -42,13 +28,9 @@ class InfluxDB extends AbstractDriver
      * @param $tcpConnection
      * @param $udpConnection
      */
-    public function __construct($tcpConnection, $udpConnection = null)
+    public function __construct(AbstractInfluxDBAdapter $adapter)
     {
-        $this->readConnection = $tcpConnection;
-
-        $this->writeConnection = is_null($udpConnection)
-            ? $tcpConnection
-            : $udpConnection;
+        $this->adapter = $adapter;
     }
 
     /**
@@ -64,13 +46,15 @@ class InfluxDB extends AbstractDriver
      */
     public function measurement($measurement, $value = null, array $tags = [], array $fields = [], $timestamp = null)
     {
-        return $this->point(new Point(
-            $measurement,
-            $value,
-            array_merge($this->tags, $tags),
-            array_merge($this->extra, $fields),
-            $this->getNanoSecondTimestamp($timestamp)
-        ));
+        return $this->point(
+            $this->adapter->point(
+                $measurement,
+                $value,
+                array_merge($this->tags, $tags),
+                array_merge($this->extra, $fields),
+                $timestamp
+            )
+        );
     }
 
     /**
@@ -83,7 +67,6 @@ class InfluxDB extends AbstractDriver
     public function point(Point $point)
     {
         $this->points[] = $point;
-
         return $this;
     }
 
@@ -101,7 +84,7 @@ class InfluxDB extends AbstractDriver
         $this->metrics = [];
 
         if (count($this->points)) {
-            $this->getWriteConnection()->writePoints($this->points);
+            $this->adapter->getWriteConnection()->writePoints($this->points);
             $this->points = [];
         }
 
@@ -116,12 +99,12 @@ class InfluxDB extends AbstractDriver
      */
     public function format(Metric $metric)
     {
-        return new Point(
+        return $this->adapter->point(
             $metric->getName(),
             $metric->getValue(),
             array_merge($this->tags, $metric->getTags()),
             array_merge($this->extra, $metric->getExtra()),
-            $this->getNanoSecondTimestamp($metric->getTimestamp())
+            $metric->getTimestamp()
         );
     }
 
@@ -134,7 +117,7 @@ class InfluxDB extends AbstractDriver
      */
     public function send($metrics)
     {
-        $this->getWriteConnection()->writePoints(
+        $this->adapter->getWriteConnection()->writePoints(
             array_map(function ($metric) {
                 return $this->format($metric);
             }, (array)$metrics)
@@ -154,35 +137,11 @@ class InfluxDB extends AbstractDriver
      */
     public function getWriteConnection()
     {
-        return $this->writeConnection;
+        return $this->adapter->getWriteConnection();
     }
 
     /**
-     * @param Database $connection
-     */
-    public function setWriteConnection(Database $connection)
-    {
-        $this->writeConnection = $connection;
-    }
-
-    /**
-     * @return Database
-     */
-    public function getReadConnection()
-    {
-        return $this->readConnection;
-    }
-
-    /**
-     * @param Database $connection
-     */
-    public function setReadConnection(Database $connection)
-    {
-        $this->readConnection = $connection;
-    }
-
-    /**
-     * Pass through to the Influx client anything we don't handle.
+     * Pass through to the Influx adapter anything we don't handle.
      *
      * @param $method
      * @param $parameters
@@ -191,10 +150,6 @@ class InfluxDB extends AbstractDriver
      */
     public function __call($method, $parameters)
     {
-        if (strpos($method, 'write') === 0) {
-            return $this->getWriteConnection()->$method(...$parameters);
-        }
-
-        return $this->getReadConnection()->$method(...$parameters);
+        return $this->adapter->$method(...$parameters);
     }
 }
