@@ -10,6 +10,7 @@ use InfluxDB\Client;
 use STS\Metrics\Contracts\ShouldReportMetric;
 use STS\Metrics\Drivers\CloudWatch;
 use STS\Metrics\Drivers\InfluxDB;
+use STS\Metrics\Drivers\InfluxDB2;
 use Illuminate\Foundation\Application as LaravelApplication;
 use Laravel\Lumen\Application as LumenApplication;
 
@@ -32,6 +33,10 @@ class MetricsServiceProvider extends ServiceProvider
 
         $this->app->singleton(InfluxDB::class, function () {
             return $this->createInfluxDBDriver($this->app['config']['metrics.backends.influxdb']);
+        });
+
+        $this->app->singleton(InfluxDB2::class, function () {
+            return $this->createInfluxDB2Driver($this->app['config']['metrics.backends.influxdb2']);
         });
 
         $this->app->singleton(CloudWatch::class, function () {
@@ -131,6 +136,11 @@ class MetricsServiceProvider extends ServiceProvider
             : null;
 
         return new InfluxDB($tcpConnection, $udpConnection);
+    }
+
+    protected function createInfluxDB2Driver(array $config)
+    {
+        return new \InfluxDB2\Client($config);
     }
 
     /**
