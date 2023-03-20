@@ -16,8 +16,8 @@ class InfluxDB2Adapter extends AbstractInfluxDBAdapter
     {
         $this->readConnection = $client->createQueryApi();
         $this->writeConnection = $useUdp
-            ? $client->createWriteApi()
-            : $client->createUdpWriter();
+            ? $client->createUdpWriter()
+            : $client->createWriteApi();
     }
 
     /**
