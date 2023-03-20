@@ -19,8 +19,7 @@ return [
             'token' => env('IDB2_TOKEN'),
             'org' => env('IDB2_ORG'),
             'bucket' => env('IDB2_BUCKET'),
-            'precision' => env('IDB2_PRECISION', WritePrecision::NS),
-            'debug' => env('IDB2_DEBUG', false)
+            'precision' => WritePrecision::NS,
         ],
         'cloudwatch' => [
             'region' => env('CLOUDWATCH_REGION', env('AWS_DEFAULT_REGION', 'us-east-1')),
