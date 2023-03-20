@@ -140,7 +140,9 @@ class MetricsServiceProvider extends ServiceProvider
 
     protected function createInfluxDB2Driver(array $config)
     {
-        return new \InfluxDB2\Client($config);
+        return new InfluxDB2(
+            new \InfluxDB2\Client($config)
+        );
     }
 
     /**
