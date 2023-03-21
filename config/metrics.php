@@ -12,7 +12,7 @@ return [
             'udp_port' => env('IDB_UDP_PORT'),
             'version' => env('IDB_VERSION', 2),
             'token' => env('IDB_TOKEN'),
-            'org' => env('IDB_ORG')
+            'org' => env('IDB_ORG', '') // Cannot be null otherwise WriteApi::getOption throws a fit [DJF]
         ],
         'cloudwatch' => [
             'region' => env('CLOUDWATCH_REGION', env('AWS_DEFAULT_REGION', 'us-east-1')),
