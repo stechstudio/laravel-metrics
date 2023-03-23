@@ -3,7 +3,6 @@
 namespace STS\Metrics;
 
 use Aws\CloudWatch\CloudWatchClient;
-use Aws\Sdk;
 use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
 use InfluxDB\Client;
@@ -16,6 +15,7 @@ use InfluxDB2\Model\WritePrecision;
 use Laravel\Lumen\Application as LumenApplication;
 use STS\Metrics\Adapters\InfluxDB1Adapter;
 use STS\Metrics\Adapters\InfluxDB2Adapter;
+use STS\Metrics\Octane\Listeners\FlushMetrics;
 
 /**
  * Class MetricsServiceProvider
@@ -94,6 +94,10 @@ class MetricsServiceProvider extends ServiceProvider
                     ->add($event->createMetric());
             }
         });
+
+        if (class_exists(\Laravel\Octane\Events\RequestTerminated::class)) {
+            $this->app['events']->listen(\Laravel\Octane\Events\RequestTerminated::class, FlushMetrics::class);
+        }
     }
 
     /**
