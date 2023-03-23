@@ -6,7 +6,7 @@ class FlushMetrics
 {
     public function handle($event)
     {
-        $metrics = app('metrcis');
+        $metrics = app('metrics');
 
         foreach ($metrics->getDrivers() as $driver) {
             $driver->flush();
