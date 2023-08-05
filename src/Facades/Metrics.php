@@ -8,7 +8,7 @@ use STS\Metrics\Metric;
 use STS\Metrics\MetricsManager;
 
 /**
- * @mixin MetricsManager
+ * @mixin AbstractDriver
  */
 class Metrics extends Facade
 {

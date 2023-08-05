@@ -15,11 +15,31 @@ use STS\Metrics\Drivers\PostHog;
  */
 class MetricsManager extends Manager
 {
+    protected $driverCreatedCallback = null;
+
+    public function whenDriverCreated(callable $callback)
+    {
+        $this->driverCreatedCallback = $callback;
+
+        return $this;
+    }
+
     public function getDefaultDriver(): string
     {
         return $this->container['config']['metrics.default'] == null
             ? 'null'
             : $this->container['config']['metrics.default'];
+    }
+
+    protected function createDriver($driver)
+    {
+        $driver = parent::createDriver($driver);
+
+        if($this->driverCreatedCallback) {
+            call_user_func($this->driverCreatedCallback, $driver);
+        }
+
+        return $driver;
     }
 
     public function createInfluxdbDriver(): InfluxDB
