@@ -3,55 +3,46 @@
 namespace STS\Metrics;
 
 use Illuminate\Support\Manager;
+use STS\Metrics\Drivers\AbstractDriver;
 use STS\Metrics\Drivers\CloudWatch;
 use STS\Metrics\Drivers\InfluxDB;
 use STS\Metrics\Drivers\LogDriver;
 use STS\Metrics\Drivers\NullDriver;
+use STS\Metrics\Drivers\PostHog;
 
 /**
- * Class MetricsManager
- * @package STS\Metrics
+ * @mixin AbstractDriver
  */
 class MetricsManager extends Manager
 {
-    /**
-     * @return string
-     */
-    public function getDefaultDriver()
+    public function getDefaultDriver(): string
     {
         return $this->container['config']['metrics.default'] == null
             ? 'null'
             : $this->container['config']['metrics.default'];
     }
 
-    /**
-     * @return InfluxDB
-     */
-    public function createInfluxdbDriver()
+    public function createInfluxdbDriver(): InfluxDB
     {
         return $this->container->make(InfluxDB::class);
     }
 
-    /**
-     * @return mixed
-     */
-    public function createCloudwatchDriver()
+    public function createCloudwatchDriver(): CloudWatch
     {
         return $this->container->make(CloudWatch::class);
     }
 
-    /**
-     * @return LogDriver
-     */
-    public function createLogDriver()
+    public function createPostHogDriver(): PostHog
+    {
+        return $this->container->make(PostHog::class);
+    }
+
+    public function createLogDriver(): LogDriver
     {
         return $this->container->make(LogDriver::class);
     }
 
-    /**
-     * @return mixed
-     */
-    public function createNullDriver()
+    public function createNullDriver(): NullDriver
     {
         return new NullDriver();
     }

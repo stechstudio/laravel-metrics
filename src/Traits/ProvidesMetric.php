@@ -5,16 +5,12 @@ namespace STS\Metrics\Traits;
 use Illuminate\Support\Str;
 use STS\Metrics\Metric;
 
-/**
- * Class ProvidesMetric
- * @package STS\Metrics\Traits
- */
 trait ProvidesMetric
 {
     /**
      * @return Metric
      */
-    public function createMetric()
+    public function createMetric(): Metric
     {
         return (new Metric($this->getMetricName()))
             ->setValue($this->getMetricValue())
@@ -25,19 +21,13 @@ trait ProvidesMetric
             ->setResolution($this->getMetricResolution());
     }
 
-    /**
-     * @return string
-     */
-    public function getMetricName()
+    public function getMetricName(): string
     {
         return property_exists($this, 'metricName')
             ? $this->metricName
             : Str::snake((new \ReflectionClass($this))->getShortName());
     }
 
-    /**
-     * @return mixed
-     */
     public function getMetricValue()
     {
         return property_exists($this, 'metricValue')
@@ -45,39 +35,27 @@ trait ProvidesMetric
             : 1;
     }
 
-    /**
-     * @return string
-     */
-    public function getMetricUnit()
+    public function getMetricUnit(): string|null
     {
         return property_exists($this, 'metricUnit')
             ? $this->metricUnit
             : null;
     }
 
-    /**
-     * @return array
-     */
-    public function getMetricTags()
+    public function getMetricTags(): array
     {
         return property_exists($this, 'metricTags')
             ? $this->metricTags
             : [];
     }
 
-    /**
-     * @return array
-     */
-    public function getMetricExtra()
+    public function getMetricExtra(): array
     {
         return property_exists($this, 'metricExtra')
             ? $this->metricExtra
             : [];
     }
 
-    /**
-     * @return mixed
-     */
     public function getMetricTimestamp()
     {
         return property_exists($this, 'metricTimestamp')
@@ -85,10 +63,7 @@ trait ProvidesMetric
             : new \DateTime;
     }
 
-    /**
-     * @return int
-     */
-    public function getMetricResolution()
+    public function getMetricResolution(): int|null
     {
         return property_exists($this, 'metricResolution')
             ? $this->metricResolution

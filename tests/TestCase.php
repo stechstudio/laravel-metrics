@@ -1,15 +1,18 @@
 <?php
+use STS\Metrics\MetricsServiceProvider;
+use STS\Metrics\Facades\Metrics;
+
 class TestCase extends Orchestra\Testbench\TestCase
 {
     protected function getPackageProviders($app)
     {
-        return ['STS\Metrics\MetricsServiceProvider'];
+        return [MetricsServiceProvider::class];
     }
 
     protected function getPackageAliases($app)
     {
         return [
-            'Metrics' => 'STS\Metrics\MetricsFacade'
+            'Metrics' => Metrics::class
         ];
     }
 

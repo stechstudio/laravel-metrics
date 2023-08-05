@@ -3,42 +3,22 @@
 namespace STS\Metrics\Drivers;
 
 use InfluxDB\Database;
+use InfluxDB\Exception;
 use InfluxDB\Point;
 use STS\Metrics\Metric;
 
-/**
- * Class InfluxDB
- * @package STS\Metrics\Drivers
- */
 class InfluxDB extends AbstractDriver
 {
-    /**
-     * @var Database
-     */
-    protected $readConnection;
-    /**
-     * @var Database
-     */
-    protected $writeConnection;
-    /**
-     * @var array
-     */
-    protected $points = [];
-    /**
-     * @var Database
-     */
-    protected $tcpConnection;
-    /**
-     * @var Database
-     */
-    protected $udpConnection;
+    protected Database $readConnection;
 
-    /**
-     * InfluxDB constructor.
-     *
-     * @param $tcpConnection
-     * @param $udpConnection
-     */
+    protected Database $writeConnection;
+
+    protected array $points = [];
+
+    protected Database $tcpConnection;
+
+    protected Database $udpConnection;
+
     public function __construct($tcpConnection, $udpConnection = null)
     {
         $this->readConnection = $tcpConnection;
@@ -52,14 +32,20 @@ class InfluxDB extends AbstractDriver
      * Queue up a new measurement
      *
      * @param string $measurement the name of the measurement ... 'this-data'
-     * @param mixed  $value       measurement value ... 15
-     * @param array  $tags        measurement tags  ... ['host' => 'server01', 'region' => 'us-west']
-     * @param array  $fields      measurement fields ... ['cpucount' => 10, 'free' => 2]
-     * @param mixed  $timestamp   timestamp in nanoseconds on Linux ONLY
+     * @param mixed|null $value measurement value ... 15
+     * @param array $tags measurement tags  ... ['host' => 'server01', 'region' => 'us-west']
+     * @param array $fields measurement fields ... ['cpucount' => 10, 'free' => 2]
+     * @param mixed|null $timestamp timestamp in nanoseconds on Linux ONLY
      *
      * @return $this
      */
-    public function measurement($measurement, $value = null, array $tags = [], array $fields = [], $timestamp = null)
+    public function measurement(
+        string $measurement,
+        mixed  $value = null,
+        array  $tags = [],
+        array  $fields = [],
+        mixed  $timestamp = null
+    ): static
     {
         return $this->point(new Point(
             $measurement,
@@ -70,14 +56,7 @@ class InfluxDB extends AbstractDriver
         ));
     }
 
-    /**
-     * Queue up a new point
-     *
-     * @param Point $point
-     *
-     * @return $this
-     */
-    public function point(Point $point)
+    public function point(Point $point): static
     {
         $this->points[] = $point;
 
@@ -85,24 +64,20 @@ class InfluxDB extends AbstractDriver
     }
 
     /**
-     * A public way tog et the nanosecond precision we desire.
-     *
-     * @param mixed $timestamp
-     *
-     * @return int|null
+     * A public way to get the nanosecond precision we desire.
      */
-    public function getNanoSecondTimestamp($timestamp = null)
+    public function getNanoSecondTimestamp(mixed $timestamp = null): int
     {
         if ($timestamp instanceof \DateTime) {
             return $timestamp->getTimestamp() * 1000000000;
         }
 
-        if (strlen($timestamp) == 19) {
+        if (strlen($timestamp) === 19) {
             // Looks like it is already nanosecond precise!
             return $timestamp;
         }
 
-        if (strlen($timestamp) == 10) {
+        if (strlen($timestamp) === 10) {
             // This appears to be in seconds
             return $timestamp * 1000000000;
         }
@@ -117,10 +92,9 @@ class InfluxDB extends AbstractDriver
     }
 
     /**
-     * @return $this
-     * @throws \InfluxDB\Exception
+     * @throws Exception
      */
-    public function flush()
+    public function flush(): static
     {
         if (empty($this->getMetrics())) {
             return $this;
@@ -138,12 +112,9 @@ class InfluxDB extends AbstractDriver
     }
 
     /**
-     * @param Metric $metric
-     *
-     * @return Point
-     * @throws \InfluxDB\Database\Exception
+     * @throws Database\Exception
      */
-    public function format(Metric $metric)
+    public function format(Metric $metric): Point
     {
         return new Point(
             $metric->getName(),
@@ -155,13 +126,10 @@ class InfluxDB extends AbstractDriver
     }
 
     /**
-     * Send one or more metrics to InfluxDB now
-     *
-     * @param $metrics
-     *
-     * @throws \InfluxDB\Exception
+     * @throws Exception
+     * @throws Database\Exception
      */
-    public function send($metrics)
+    public function send($metrics): void
     {
         $this->getWriteConnection()->writePoints(
             array_map(function ($metric) {
@@ -170,42 +138,27 @@ class InfluxDB extends AbstractDriver
         );
     }
 
-    /**
-     * @return array
-     */
-    public function getPoints()
+    public function getPoints(): array
     {
         return $this->points;
     }
 
-    /**
-     * @return Database
-     */
-    public function getWriteConnection()
+    public function getWriteConnection(): Database
     {
         return $this->writeConnection;
     }
 
-    /**
-     * @param Database $connection
-     */
-    public function setWriteConnection(Database $connection)
+    public function setWriteConnection(Database $connection): void
     {
         $this->writeConnection = $connection;
     }
 
-    /**
-     * @return Database
-     */
-    public function getReadConnection()
+    public function getReadConnection(): Database
     {
         return $this->readConnection;
     }
 
-    /**
-     * @param Database $connection
-     */
-    public function setReadConnection(Database $connection)
+    public function setReadConnection(Database $connection): void
     {
         $this->readConnection = $connection;
     }
@@ -218,9 +171,9 @@ class InfluxDB extends AbstractDriver
      *
      * @return mixed
      */
-    public function __call($method, $parameters)
+    public function __call($method, $parameters): mixed
     {
-        if (strpos($method, 'write') === 0) {
+        if (str_starts_with($method, 'write')) {
             return $this->getWriteConnection()->$method(...$parameters);
         }
 

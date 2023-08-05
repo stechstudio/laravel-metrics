@@ -1,6 +1,5 @@
 <?php
 use STS\Metrics\Drivers\InfluxDB;
-
 class InfluxDBDriverTest extends TestCase
 {
     public function testUdpWriteClient()

@@ -1,6 +1,6 @@
 <?php
 use STS\Metrics\Drivers\CloudWatch;
-
+use STS\Metrics\Facades\Metrics;
 class CloudWatchDriverTest extends TestCase
 {
     public function testFormat()
