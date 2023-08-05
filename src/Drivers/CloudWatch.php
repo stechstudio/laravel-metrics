@@ -60,9 +60,10 @@ class CloudWatch extends AbstractDriver
                 'Timestamp'         => $this->formatTimestamp($metric->getTimestamp()),
                 'Unit'              => $metric->getUnit()
             ]),
-            [
-                'Value' => $metric->getValue()
-            ]);
+            $metric->getValue() === null
+                ? []
+                : ['Value' => $metric->getValue()]
+        );
     }
 
     protected function formatTimestamp($timestamp): int

@@ -118,7 +118,7 @@ class InfluxDB extends AbstractDriver
     {
         return new Point(
             $metric->getName(),
-            $metric->getValue(),
+            $metric->getValue() ?? 1,
             array_merge($this->tags, $metric->getTags()),
             array_merge($this->extra, $metric->getExtra()),
             $this->getNanoSecondTimestamp($metric->getTimestamp())

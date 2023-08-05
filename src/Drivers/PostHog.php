@@ -41,7 +41,9 @@ class PostHog extends AbstractDriver
             'distinctId' => $this->distinctId,
             'event' => $metric->getName(),
             'properties' => array_merge(
-                ['value' => $metric->getValue()],
+                $metric->getValue()
+                    ? ['value' => $metric->getValue()]
+                    : [],
                 $this->extra,
                 $metric->getExtra()
             ),

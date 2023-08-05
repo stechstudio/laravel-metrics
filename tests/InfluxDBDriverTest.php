@@ -44,13 +44,15 @@ class InfluxDBDriverTest extends TestCase
         $driver->setTags(['tag1' => 'tag_value'])->setExtra(['extra1' => 'extra_value']);
 
         $metric = (new \STS\Metrics\Metric("my_metric"))
+            //->setValue(1)
             ->setTags(['foo' => 'bar']);
 
         $point = $driver->format($metric);
 
         $this->assertCount(2, $point->getTags());
         $this->assertEquals("tag_value", $point->getTags()['tag1']);
-        $this->assertCount(1, $point->getFields());
+
+        $this->assertCount(2, $point->getFields());
         $this->assertEquals('"extra_value"', $point->getFields()['extra1']);
     }
 

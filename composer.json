@@ -23,8 +23,7 @@
         "mockery/mockery": "^1.6",
         "aws/aws-sdk-php": "^3.2",
         "influxdb/influxdb-php": "^1.15",
-        "posthog/posthog-php": "^3.0",
-        "influxdata/influxdb-client-php": "^3.4"
+        "posthog/posthog-php": "^3.0"
     },
     "suggest": {
         "posthog/posthog-php": "PostHog integration",

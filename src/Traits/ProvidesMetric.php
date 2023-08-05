@@ -28,7 +28,7 @@ trait ProvidesMetric
             : Str::snake((new \ReflectionClass($this))->getShortName());
     }
 
-    public function getMetricValue()
+    public function getMetricValue(): mixed
     {
         return property_exists($this, 'metricValue')
             ? $this->metricValue
