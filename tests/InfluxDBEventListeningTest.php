@@ -1,4 +1,5 @@
 <?php
+use STS\Metrics\Facades\Metrics;
 class InfluxDBEventListeningTest extends TestCase
 {
     protected function setUp(): void

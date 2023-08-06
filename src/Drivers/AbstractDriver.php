@@ -4,34 +4,15 @@ namespace STS\Metrics\Drivers;
 
 use STS\Metrics\Metric;
 
-/**
- * Class AbstractDriver
- * @package STS\Metrics\Drivers
- */
 abstract class AbstractDriver
 {
-    /**
-     * @var array
-     */
-    protected $metrics = [];
+    protected array $metrics = [];
 
-    /**
-     * @var array
-     */
-    protected $tags = [];
+    protected array $tags = [];
 
-    /**
-     * @var array
-     */
-    protected $extra = [];
+    protected array $extra = [];
 
-    /**
-     * @param $name
-     * @param $value
-     *
-     * @return Metric
-     */
-    public function create($name, $value = null)
+    public function create(string $name, $value = null): Metric
     {
         $metric = new Metric($name, $value, $this);
         $this->add($metric);
@@ -39,16 +20,11 @@ abstract class AbstractDriver
         return $metric;
     }
 
-    /**
-     * @param Metric $metric
-     *
-     * @return $this
-     */
-    public function add(Metric $metric)
+    public function add(Metric $metric): static
     {
         $metric->setDriver($this);
 
-        if($metric->getTimestamp() == null) {
+        if($metric->getTimestamp() === null) {
             $metric->setTimestamp(new \DateTime);
         }
 
@@ -57,22 +33,15 @@ abstract class AbstractDriver
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getMetrics()
+    public function getMetrics(): array
     {
         return $this->metrics;
     }
 
     /**
      * Set default tags to be merged in on all metrics
-     *
-     * @param array $tags
-     *
-     * @return $this
      */
-    public function setTags(array $tags)
+    public function setTags(array $tags): static
     {
         $this->tags = $tags;
 
@@ -81,27 +50,15 @@ abstract class AbstractDriver
 
     /**
      * Set default extra to be merged in on all metrics
-     *
-     * @param array $extra
-     *
-     * @return $this
      */
-    public function setExtra(array $extra)
+    public function setExtra(array $extra): static
     {
         $this->extra = $extra;
 
         return $this;
     }
 
-    /**
-     * @param Metric $metric
-     *
-     * @return mixed
-     */
     abstract public function format(Metric $metric);
 
-    /**
-     * @return $this
-     */
-    abstract public function flush();
+    abstract public function flush(): static;
 }

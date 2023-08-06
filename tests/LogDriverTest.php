@@ -1,6 +1,6 @@
 <?php
 use STS\Metrics\Drivers\LogDriver;
-
+use STS\Metrics\Facades\Metrics;
 class LogDriverTest extends TestCase
 {
 

@@ -1,11 +1,14 @@
 <?php
+use STS\Metrics\Metric;
+use STS\Metrics\Facades\Metrics;
+
 class MetricTest extends TestCase
 {
     public function testSelfAddingToDefaultDriver()
     {
         $this->setupInfluxDB();
 
-        (new \STS\Metrics\Metric("my_metric", 5))
+        (new Metric("my_metric", 5))
             ->setTags(['foo' => 'bar'])
             ->add();
 
@@ -32,7 +35,7 @@ class MetricTest extends TestCase
 
     public function testDefaultTimestampWhenAdding()
     {
-        $metric = new \STS\Metrics\Metric('my_metric', 1);
+        $metric = new Metric('my_metric', 1);
 
         $this->assertNull($metric->getTimestamp());
 
@@ -52,7 +55,7 @@ class MetricTest extends TestCase
 
     public function testGivenTimestampIsntChanged()
     {
-        $metric = new \STS\Metrics\Metric('my_metric', 1);
+        $metric = new Metric('my_metric', 1);
         $time = time();
 
         $metric->setTimestamp($time);
