@@ -55,6 +55,12 @@ class TestCase extends Orchestra\Testbench\TestCase
         }
     }
 
+    protected function setupPostHog($config = [], $mock = true)
+    {
+        app('config')->set('metrics.default', 'posthog');
+        app('config')->set('metrics.backends.posthog.key', 'Testing');
+    }
+
     protected function setupLogDriver($config = [], $mock = true)
     {
         app('config')->set('metrics.default', 'log');
