@@ -18,9 +18,11 @@ jobs:
         env:
           APP_ENV: testing
           APP_KEY: 7yPSFp$SCRcRh8zkq?!B$!5tPEF$cxq3
+          XDEBUG_MODE: coverage
         with:
           bootstrap: vendor/autoload.php
           configuration: phpunit.xml
+          php_extensions: xdebug
           args: --coverage-text
           php_version: "8.2"
           version: "10"
