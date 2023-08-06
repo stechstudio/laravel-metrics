@@ -2,16 +2,15 @@
 
 namespace STS\Metrics\Adapters;
 
+use InfluxDB2\Client;
+use InfluxDB2\Point;
+use Throwable;
+
 class InfluxDB2Adapter extends AbstractInfluxDBAdapter
 {
-
-    /**
-     * @param \InfluxDB2\Client $client
-     * @param boolean $useUdp
-     */
     public function __construct(
-        \InfluxDB2\Client $client,
-        $useUdp = false
+        Client $client,
+        bool $useUdp = false
     )
     {
         $this->readConnection = $client->createQueryApi();
@@ -20,23 +19,26 @@ class InfluxDB2Adapter extends AbstractInfluxDBAdapter
             : $client->createWriteApi();
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function point($measurement, $value = null, $tags = [], $additionalFields = [], $timestamp = null)
+    public function point(
+        string $measurement,
+        mixed  $value = null,
+        array  $tags = [],
+        array  $fields = [],
+        mixed  $timestamp = null
+    ): Point
     {
-        return new \InfluxDB2\Point(
+        return new Point(
             $measurement,
             $tags,
-            array_merge(compact('value'), $additionalFields),
+            array_merge(compact('value'), $fields),
             $this->getNanoSecondTimestamp($timestamp)
         );
     }
 
     /**
-     * @inheritDoc
+     * @throws Throwable
      */
-    public function writePoints($points, $precision = \InfluxDB2\Point::DEFAULT_WRITE_PRECISION)
+    public function writePoints(array $points, $precision = Point::DEFAULT_WRITE_PRECISION)
     {
         $this->getWriteConnection()->write($points, $precision);
         return true;

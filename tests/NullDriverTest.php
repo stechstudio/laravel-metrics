@@ -1,5 +1,7 @@
 <?php
 use STS\Metrics\Drivers\NullDriver;
+use STS\Metrics\Metric;
+use STS\Metrics\MetricsManager;
 
 class NullDriverTest extends TestCase
 {
@@ -7,7 +9,7 @@ class NullDriverTest extends TestCase
     {
         app('config')->set('metrics.default', null);
 
-        $manager = app(\STS\Metrics\MetricsManager::class);
+        $manager = app(MetricsManager::class);
 
         $this->assertInstanceOf(NullDriver::class, $manager->driver());
     }
@@ -16,7 +18,7 @@ class NullDriverTest extends TestCase
     {
         $driver = app(NullDriver::class);
 
-        $metric = (new \STS\Metrics\Metric("my_metric"));
+        $metric = (new Metric("my_metric"));
 
         $this->assertEquals([], $driver->format($metric));
     }
@@ -25,7 +27,7 @@ class NullDriverTest extends TestCase
     {
         $driver = app(NullDriver::class);
 
-        $metric = (new \STS\Metrics\Metric("my_metric"));
+        $metric = (new Metric("my_metric"));
         $driver->add($metric);
 
         // Make sure we DO keep track of metrics

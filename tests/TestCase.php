@@ -1,15 +1,18 @@
 <?php
+use STS\Metrics\MetricsServiceProvider;
+use STS\Metrics\Facades\Metrics;
+
 class TestCase extends Orchestra\Testbench\TestCase
 {
     protected function getPackageProviders($app)
     {
-        return ['STS\Metrics\MetricsServiceProvider'];
+        return [MetricsServiceProvider::class];
     }
 
     protected function getPackageAliases($app)
     {
         return [
-            'Metrics' => 'STS\Metrics\MetricsFacade'
+            'Metrics' => Metrics::class
         ];
     }
 
@@ -44,7 +47,8 @@ class TestCase extends Orchestra\Testbench\TestCase
             'host' => 'localhost',
             'tcp_port' => 8086,
             'database' => 'baz',
-            'version' => 2
+            'version' => 2,
+            'org' => 'bar'
         ], $config));
 
         if ($mock) {
@@ -72,6 +76,12 @@ class TestCase extends Orchestra\Testbench\TestCase
                 });
             Metrics::setClient($mock);
         }
+    }
+
+    protected function setupPostHog($config = [], $mock = true)
+    {
+        app('config')->set('metrics.default', 'posthog');
+        app('config')->set('metrics.backends.posthog.key', 'Testing');
     }
 
     protected function setupLogDriver($config = [], $mock = true)

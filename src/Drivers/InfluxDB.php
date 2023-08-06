@@ -3,48 +3,31 @@
 namespace STS\Metrics\Drivers;
 
 use InfluxDB\Database;
+use InfluxDB\Exception;
 use InfluxDB\Point;
+use InfluxDB2\UdpWriter;
+use InfluxDB2\WriteApi;
 use STS\Metrics\Adapters\AbstractInfluxDBAdapter;
 use STS\Metrics\Metric;
 
-/**
- * Class InfluxDB
- * @package STS\Metrics\Drivers
- */
 class InfluxDB extends AbstractDriver
-{   
-    /**
-     * @var array
-     */
-    protected $points = [];
-    /**
-     * @var AbstractInfluxDBAdapter
-     */
-    protected $adapter;
+{
+    protected array $points = [];
 
-    /**
-     * InfluxDB constructor.
-     *
-     * @param $tcpConnection
-     * @param $udpConnection
-     */
+    protected AbstractInfluxDBAdapter $adapter;
+
     public function __construct(AbstractInfluxDBAdapter $adapter)
     {
         $this->adapter = $adapter;
     }
 
-    /**
-     * Queue up a new measurement
-     *
-     * @param string $measurement the name of the measurement ... 'this-data'
-     * @param mixed  $value       measurement value ... 15
-     * @param array  $tags        measurement tags  ... ['host' => 'server01', 'region' => 'us-west']
-     * @param array  $fields      measurement fields ... ['cpucount' => 10, 'free' => 2]
-     * @param mixed  $timestamp   timestamp in nanoseconds on Linux ONLY
-     *
-     * @return $this
-     */
-    public function measurement($measurement, $value = null, array $tags = [], array $fields = [], $timestamp = null)
+    public function measurement(
+        string $measurement,
+        mixed  $value = null,
+        array  $tags = [],
+        array  $fields = [],
+        mixed  $timestamp = null
+    ): static
     {
         return $this->point(
             $this->adapter->point(
@@ -57,24 +40,17 @@ class InfluxDB extends AbstractDriver
         );
     }
 
-    /**
-     * Queue up a new point
-     *
-     * @param Point $point
-     *
-     * @return $this
-     */
-    public function point(Point $point)
+    public function point(Point $point): static
     {
         $this->points[] = $point;
+
         return $this;
     }
 
     /**
-     * @return $this
-     * @throws \InfluxDB\Exception
+     * @throws Exception
      */
-    public function flush()
+    public function flush(): static
     {
         if (empty($this->getMetrics())) {
             return $this;
@@ -92,16 +68,13 @@ class InfluxDB extends AbstractDriver
     }
 
     /**
-     * @param Metric $metric
-     *
-     * @return Point
-     * @throws \InfluxDB\Database\Exception
+     * @throws Database\Exception
      */
-    public function format(Metric $metric)
+    public function format(Metric $metric): Point
     {
         return $this->adapter->point(
             $metric->getName(),
-            $metric->getValue(),
+            $metric->getValue() ?? 1,
             array_merge($this->tags, $metric->getTags()),
             array_merge($this->extra, $metric->getExtra()),
             $metric->getTimestamp()
@@ -109,13 +82,10 @@ class InfluxDB extends AbstractDriver
     }
 
     /**
-     * Send one or more metrics to InfluxDB now
-     *
-     * @param $metrics
-     *
-     * @throws \InfluxDB\Exception
+     * @throws Exception
+     * @throws Database\Exception
      */
-    public function send($metrics)
+    public function send($metrics): void
     {
         $this->adapter->writePoints(
             array_map(function ($metric) {
@@ -124,18 +94,12 @@ class InfluxDB extends AbstractDriver
         );
     }
 
-    /**
-     * @return array
-     */
-    public function getPoints()
+    public function getPoints(): array
     {
         return $this->points;
     }
 
-    /**
-     * @return Database
-     */
-    public function getWriteConnection()
+    public function getWriteConnection(): Database|WriteApi|UdpWriter
     {
         return $this->adapter->getWriteConnection();
     }
@@ -148,7 +112,7 @@ class InfluxDB extends AbstractDriver
      *
      * @return mixed
      */
-    public function __call($method, $parameters)
+    public function __call($method, $parameters): mixed
     {
         return $this->adapter->$method(...$parameters);
     }

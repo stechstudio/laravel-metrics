@@ -2,14 +2,13 @@
 
 namespace STS\Metrics\Adapters;
 
+use InfluxDB\Database;
+use InfluxDB\Database\Exception;
+use InfluxDB\Point;
+
 class InfluxDB1Adapter extends AbstractInfluxDBAdapter
 {
-
-    /**
-     * @param \InfluxDB\Database $tcpConnection
-     * @param \InfluxDB\Database $udpConnection
-     */
-    public function __construct($tcpConnection, $udpConnection = null)
+    public function __construct(Database $tcpConnection, ?Database $udpConnection = null)
     {
         $this->readConnection = $tcpConnection;
 
@@ -18,25 +17,30 @@ class InfluxDB1Adapter extends AbstractInfluxDBAdapter
             : $udpConnection;
     }
 
-
     /**
-     * @inheritDoc
+     * @throws Exception
      */
-    public function point($measurement, $value = null, $tags = [], $additionalFields = [], $timestamp = null)
+    public function point(
+        string $measurement,
+        mixed  $value = null,
+        array  $tags = [],
+        array  $fields = [],
+        mixed  $timestamp = null
+    ): Point
     {
-        return new \InfluxDB\Point(
+        return new Point(
             $measurement,
             $value,
             $tags,
-            $additionalFields,
+            $fields,
             $this->getNanoSecondTimestamp($timestamp)
         );
     }
 
     /**
-     * @inheritDoc
+     * @throws \InfluxDB\Exception
      */
-    public function writePoints($points, $precision = \InfluxDB\Database::PRECISION_NANOSECONDS)
+    public function writePoints(array $points, $precision = Database::PRECISION_NANOSECONDS)
     {
         return $this->getWriteConnection()->writePoints($points, $precision);
     }

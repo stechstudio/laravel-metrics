@@ -5,6 +5,7 @@ namespace STS\Metrics;
 use Aws\CloudWatch\CloudWatchClient;
 use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use InfluxDB\Client;
 use STS\Metrics\Contracts\ShouldReportMetric;
 use STS\Metrics\Drivers\CloudWatch;
@@ -15,6 +16,7 @@ use InfluxDB2\Model\WritePrecision;
 use Laravel\Lumen\Application as LumenApplication;
 use STS\Metrics\Adapters\InfluxDB1Adapter;
 use STS\Metrics\Adapters\InfluxDB2Adapter;
+use STS\Metrics\Drivers\PostHog;
 use STS\Metrics\Octane\Listeners\FlushMetrics;
 
 /**
@@ -44,6 +46,10 @@ class MetricsServiceProvider extends ServiceProvider
 
         $this->app->singleton(CloudWatch::class, function () {
             return $this->createCloudWatchDriver($this->app['config']['metrics.backends.cloudwatch']);
+        });
+
+        $this->app->singleton(PostHog::class, function () {
+            return $this->createPostHogDriver($this->app['config']['metrics.backends.posthog']);
         });
     }
 
@@ -214,5 +220,20 @@ class MetricsServiceProvider extends ServiceProvider
         }
 
         return new CloudWatch(new CloudWatchClient($opts), $config['namespace']);
+    }
+
+    protected function createPostHogDriver(array $config)
+    {
+        \PostHog\PostHog::init($config['key'], [
+            'host' => $config['host'],
+        ]);
+
+        return new PostHog(
+            match(true) {
+                auth()->check() => $config['distinct_prefix'] . auth()->id(),
+                session()->isStarted() => sha1(session()->getId()),
+                default => Str::random()
+            }
+        );
     }
 }

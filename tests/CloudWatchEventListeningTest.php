@@ -1,4 +1,5 @@
 <?php
+use STS\Metrics\Facades\Metrics;
 class CloudWatchEventListeningTest extends TestCase
 {
     protected function setUp(): void

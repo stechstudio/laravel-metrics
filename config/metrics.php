@@ -19,6 +19,11 @@ return [
             'key' => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'namespace' => env('CLOUDWATCH_NAMESPACE')
+        ],
+        "posthog" => [
+            'key' => env('POSTHOG_API_KEY'),
+            'host' => env('POSTHOG_HOST', 'https://app.posthog.com'),
+            'distinct_prefix' => env('POSTHOG_DISTINCT_PREFIX', 'user:')
         ]
     ],
 ];

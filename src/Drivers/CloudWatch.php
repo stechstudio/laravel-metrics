@@ -5,56 +5,29 @@ namespace STS\Metrics\Drivers;
 use Aws\CloudWatch\CloudWatchClient;
 use STS\Metrics\Metric;
 
-/**
- * Class CloudWatch
- * @package STS\Metrics\Drivers
- */
 class CloudWatch extends AbstractDriver
 {
-    /**
-     * @var CloudWatchClient
-     */
-    protected $client;
+    protected CloudWatchClient $client;
 
-    /**
-     * @var string
-     */
-    protected $namespace;
+    protected string $namespace;
 
-    /**
-     * CloudWatch constructor.
-     *
-     * @param CloudWatchClient $client
-     * @param                  $namespace
-     */
     public function __construct(CloudWatchClient $client, $namespace)
     {
         $this->setClient($client);
         $this->namespace = $namespace;
     }
 
-    /**
-     * @return CloudWatchClient
-     */
-    public function getClient()
+    public function getClient(): CloudWatchClient
     {
         return $this->client;
     }
 
-    /**
-     * @param CloudWatchClient $client
-     */
-    public function setClient(CloudWatchClient $client)
+    public function setClient(CloudWatchClient $client): void
     {
         $this->client = $client;
     }
 
-    /**
-     * Flush all queued metrics to CloudWatch
-     *
-     * @return $this
-     */
-    public function flush()
+    public function flush(): static
     {
         if (!count($this->getMetrics())) {
             return $this;
@@ -67,12 +40,7 @@ class CloudWatch extends AbstractDriver
         return $this;
     }
 
-    /**
-     * Send one or more metrics to CloudWatch now
-     *
-     * @param $metrics
-     */
-    public function send($metrics)
+    public function send($metrics): void
     {
         $this->getClient()->putMetricData([
             'MetricData' => array_map(function ($metric) {
@@ -82,12 +50,7 @@ class CloudWatch extends AbstractDriver
         ]);
     }
 
-    /**
-     * @param Metric $metric
-     *
-     * @return array
-     */
-    public function format(Metric $metric)
+    public function format(Metric $metric): array
     {
         return array_merge(
             array_filter([
@@ -97,19 +60,15 @@ class CloudWatch extends AbstractDriver
                 'Timestamp'         => $this->formatTimestamp($metric->getTimestamp()),
                 'Unit'              => $metric->getUnit()
             ]),
-            [
-                'Value' => $metric->getValue()
-            ]);
+            $metric->getValue() === null
+                ? []
+                : ['Value' => $metric->getValue()]
+        );
     }
 
-    /**
-     * @param $timestamp
-     *
-     * @return int
-     */
-    protected function formatTimestamp($timestamp)
+    protected function formatTimestamp($timestamp): int
     {
-        if (is_numeric($timestamp) && strlen($timestamp) == 10) {
+        if (is_numeric($timestamp) && strlen($timestamp) === 10) {
             // This appears to be in seconds already
             return $timestamp;
         }
@@ -127,7 +86,7 @@ class CloudWatch extends AbstractDriver
         return time();
     }
 
-    protected function formatDimensions(array $dimensions)
+    protected function formatDimensions(array $dimensions): array
     {
         return array_map(function ($key, $value) {
             return [

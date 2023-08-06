@@ -5,24 +5,13 @@ namespace STS\Metrics\Drivers;
 use STS\Metrics\Metric;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class LogDriver
- * @package STS\Metrics\Drivers
- */
 class LogDriver extends AbstractDriver
 {
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    public function __construct(LoggerInterface $logger)
+    public function __construct(protected LoggerInterface $logger)
     {
-        $this->logger = $logger;
     }
 
-    public function format(Metric $metric)
+    public function format(Metric $metric): array
     {
         return array_filter([
             'name' => $metric->getName(),
@@ -35,7 +24,7 @@ class LogDriver extends AbstractDriver
         ]);
     }
 
-    public function flush()
+    public function flush(): static
     {
         if (!count($this->getMetrics())) {
             return $this;

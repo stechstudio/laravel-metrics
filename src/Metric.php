@@ -98,160 +98,97 @@ class Metric
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->value;
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return $this
-     */
-    public function setValue($value)
+    public function setValue(mixed $value): static
     {
         $this->value = $value;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getUnit()
+    public function getUnit(): string|null
     {
         return $this->unit;
     }
 
-    /**
-     * @param string $unit
-     *
-     * @return $this
-     */
-    public function setUnit($unit)
+    public function setUnit(mixed $unit): static
     {
         $this->unit = $unit;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getTags()
+    public function getTags(): array
     {
         return $this->tags;
     }
 
-    /**
-     * @param array $tags
-     *
-     * @return $this
-     */
-    public function setTags(array $tags)
+    public function setTags(array $tags): static
     {
         $this->tags = $tags;
 
         return $this;
     }
 
-    /**
-     * @param $key
-     * @param $value
-     */
-    public function addTag($key, $value)
+    public function addTag($key, $value): static
     {
         $this->tags[$key] = $value;
+
+        return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getExtra()
+    public function getExtra(): array
     {
         return $this->extra;
     }
 
-    /**
-     * @param array $extra
-     *
-     * @return $this
-     */
-    public function setExtra(array $extra)
+    public function setExtra(array $extra): static
     {
         $this->extra = $extra;
 
         return $this;
     }
 
-    /**
-     * @param $key
-     * @param $value
-     */
-    public function addExtra($key, $value)
+    public function addExtra($key, $value): static
     {
         $this->extra[$key] = $value;
+
+        return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getTimestamp()
+    public function getTimestamp(): mixed
     {
         return $this->timestamp;
     }
 
-    /**
-     * @param mixed $timestamp
-     *
-     * @return $this
-     */
-    public function setTimestamp($timestamp)
+    public function setTimestamp($timestamp): static
     {
         $this->timestamp = $timestamp;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function add()
+    public function add(): AbstractDriver
     {
-        $this->getDriver()->add($this);
+        return $this->getDriver()->add($this);
+    }
+    public function getDriver(): AbstractDriver
+    {
+        return $this->driver ?? app('metrics')->driver();
     }
 
-    /**
-     * Return our own driver if we have one, otherwise our Metrics default driver
-     *
-     * @return AbstractDriver
-     */
-    public function getDriver()
-    {
-        return $this->driver
-            ? $this->driver
-            : app('metrics')->driver();
-    }
-
-    /**
-     * @param AbstractDriver $driver
-     *
-     * @return $this
-     */
-    public function setDriver(AbstractDriver $driver)
+    public function setDriver(AbstractDriver $driver): static
     {
         $this->driver = $driver;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function format()
+    public function format(): mixed
     {
         return $this->getDriver()->format($this);
     }

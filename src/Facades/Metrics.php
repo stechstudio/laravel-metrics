@@ -1,15 +1,16 @@
 <?php
 
-namespace STS\Metrics;
+namespace STS\Metrics\Facades;
 
 use Illuminate\Support\Facades\Facade;
 use STS\Metrics\Drivers\AbstractDriver;
+use STS\Metrics\Metric;
+use STS\Metrics\MetricsManager;
 
 /**
- * @method static mixed add(Metric $metric)
- * @method static AbstractDriver driver()
+ * @mixin AbstractDriver
  */
-class MetricsFacade extends Facade
+class Metrics extends Facade
 {
     /**
      * @return string

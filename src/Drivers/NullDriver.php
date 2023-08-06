@@ -4,26 +4,14 @@ namespace STS\Metrics\Drivers;
 
 use STS\Metrics\Metric;
 
-/**
- * Class Null
- * @package STS\Metrics\Drivers
- */
 class NullDriver extends AbstractDriver
 {
-    /**
-     * @return $this
-     */
-    public function flush()
+    public function flush(): static
     {
         return $this;
     }
 
-    /**
-     * @param Metric $metric
-     *
-     * @return array
-     */
-    public function format(Metric $metric)
+    public function format(Metric $metric): array
     {
         return [];
     }
