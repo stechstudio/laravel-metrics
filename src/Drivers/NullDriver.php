@@ -15,4 +15,9 @@ class NullDriver extends AbstractDriver
     {
         return [];
     }
+
+    public function __call($method, $parameters)
+    {
+        return $this;
+    }
 }
