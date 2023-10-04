@@ -30,9 +30,9 @@ METRICS_BACKEND=posthog
 POSTHOG_API_KEY=...
 ```
 
-### InfluxDB
+### InfluxDB v1.7 and under
 
-1. Install the InfluxDB PHP client: `composer require influxdata/influxdb-client-php`
+1. Install the InfluxDB PHP client: `composer require influxdb/influxdb-php`
 
 2. Add the following to your `.env` file:
 
@@ -42,6 +42,33 @@ IDB_USERNAME=...
 IDB_PASSWORD=...
 IDB_HOST=...
 IDB_DATABASE=...
+IDB_VERSION=1 # Default
+
+# Only if you are not using the default 8086
+IDB_TCP_PORT=...
+
+# If you want to send metrics over UDP instead of TCP
+IDB_UDP_PORT=...
+```
+
+### InfluxDB V1.8 and above
+
+1. Install the InfluxDB PHP client: `composer require influxdata/influxdb-client-php`
+
+2. Add the following to your `.env` file:
+
+3. In order to use UDP with InfluxDB V1.8+ you must follow
+extra [setup steps](https://github.com/influxdata/influxdb-client-php#writing-via-udp)
+
+Add the following to your `.env` file:
+
+```
+METRICS_BACKEND=influxdb
+IDB_TOKEN=...
+IDB_DATABASE=... # Use the name of your desired bucket for this value
+IDB_HOST=...
+IDB_ORG=...
+IDB_VERSION=2
 
 # Only if you are not using the default 8086
 IDB_TCP_PORT=...

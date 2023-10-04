@@ -24,6 +24,7 @@ class TestCase extends Orchestra\Testbench\TestCase
             'password' => 'bar',
             'host' => 'localhost',
             'database' => 'baz',
+            'version'  => 1,
             'tcp_port' => 8086
         ], $config));
 
@@ -34,6 +35,28 @@ class TestCase extends Orchestra\Testbench\TestCase
                     $GLOBALS['points'] = $points;
                 });
 
+            Metrics::setWriteConnection($mock);
+        }
+    }
+
+    protected function setupInfluxDB2($config = [], $mock = true)
+    {
+        app('config')->set('metrics.default', 'influxdb');
+        app('config')->set('metrics.backends.influxdb', array_merge([
+            'token' => 'foo',
+            'host' => 'localhost',
+            'tcp_port' => 8086,
+            'database' => 'baz',
+            'version' => 2,
+            'org' => 'bar'
+        ], $config));
+
+        if ($mock) {
+            $mock = Mockery::mock(\InfluxDB2\WriteApi::class);
+            $mock->shouldReceive('write')
+                ->andReturnUsing(function ($points) {
+                    $GLOBALS['points'] = $points;
+                });
             Metrics::setWriteConnection($mock);
         }
     }

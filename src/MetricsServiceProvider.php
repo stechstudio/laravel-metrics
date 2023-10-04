@@ -10,8 +10,12 @@ use InfluxDB\Client;
 use STS\Metrics\Contracts\ShouldReportMetric;
 use STS\Metrics\Drivers\CloudWatch;
 use STS\Metrics\Drivers\InfluxDB;
+use STS\Metrics\Drivers\InfluxDB2;
 use Illuminate\Foundation\Application as LaravelApplication;
+use InfluxDB2\Model\WritePrecision;
 use Laravel\Lumen\Application as LumenApplication;
+use STS\Metrics\Adapters\InfluxDB1Adapter;
+use STS\Metrics\Adapters\InfluxDB2Adapter;
 use STS\Metrics\Drivers\PostHog;
 use STS\Metrics\Octane\Listeners\FlushMetrics;
 
@@ -34,6 +38,10 @@ class MetricsServiceProvider extends ServiceProvider
 
         $this->app->singleton(InfluxDB::class, function () {
             return $this->createInfluxDBDriver($this->app['config']['metrics.backends.influxdb']);
+        });
+
+        $this->app->singleton(InfluxDB2::class, function () {
+            return $this->createInfluxDB2Driver($this->app['config']['metrics.backends.influxdb2']);
         });
 
         $this->app->singleton(CloudWatch::class, function () {
@@ -120,6 +128,46 @@ class MetricsServiceProvider extends ServiceProvider
      */
     protected function createInfluxDBDriver(array $config)
     {
+        $version = Arr::get($config, 'version', 2);
+
+        if ($version == 2) {
+            return new InfluxDB($this->createInfluxDB2Adapter($config));
+        }
+
+        return new InfluxDB($this->createInfluxDBAdapter($config));
+    }
+
+    /**
+     * @return InfluxDB2Adapter
+     */
+    protected function createInfluxDB2Adapter(array $config)
+    {
+        $opts = [
+            'url' => sprintf("%s:%s",
+                $config['host'],
+                $config['tcp_port']
+            ),
+            'token' => $config['token'],
+            'bucket' => $config['database'],
+            'org' => $config['org'],
+            'precision' => WritePrecision::NS
+        ];
+
+        if ($udpPort = Arr::get($config, 'udp_port', null)) {
+            $opts['udpPort'] = $udpPort;
+        }
+
+        return new InfluxDB2Adapter(
+            new \InfluxDB2\Client($opts),
+            ! empty($udpPort)
+        );
+    }
+
+    /**
+     * @return InfluxDB1Adapter
+     */
+    protected function createInfluxDBAdapter(array $config)
+    {
         $tcpConnection = Client::fromDSN(
             sprintf('influxdb://%s:%s@%s:%s/%s',
                 $config['username'],
@@ -140,7 +188,10 @@ class MetricsServiceProvider extends ServiceProvider
             ))
             : null;
 
-        return new InfluxDB($tcpConnection, $udpConnection);
+        return new InfluxDB1Adapter(
+            $tcpConnection,
+            $udpConnection
+        );
     }
 
     /**
