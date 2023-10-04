@@ -4,7 +4,8 @@ namespace STS\Metrics\Drivers;
 
 use InfluxDB\Database;
 use InfluxDB\Exception;
-use InfluxDB\Point;
+use InfluxDB\Point AS IDBPoint;
+use InfluxDB2\Point AS IDB2Point;
 use InfluxDB2\UdpWriter;
 use InfluxDB2\WriteApi;
 use STS\Metrics\Adapters\AbstractInfluxDBAdapter;
@@ -40,7 +41,7 @@ class InfluxDB extends AbstractDriver
         );
     }
 
-    public function point(Point $point): static
+    public function point(IDBPoint|IDB2Point $point): static
     {
         $this->points[] = $point;
 
@@ -70,7 +71,7 @@ class InfluxDB extends AbstractDriver
     /**
      * @throws Database\Exception
      */
-    public function format(Metric $metric): Point
+    public function format(Metric $metric): IDBPoint|IDB2Point
     {
         return $this->adapter->point(
             $metric->getName(),
