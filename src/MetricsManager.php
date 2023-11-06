@@ -9,6 +9,7 @@ use STS\Metrics\Drivers\InfluxDB;
 use STS\Metrics\Drivers\LogDriver;
 use STS\Metrics\Drivers\NullDriver;
 use STS\Metrics\Drivers\PostHog;
+use STS\Metrics\Drivers\PrometheusDriver;
 
 /**
  * @mixin AbstractDriver
@@ -65,5 +66,10 @@ class MetricsManager extends Manager
     public function createNullDriver(): NullDriver
     {
         return new NullDriver();
+    }
+
+    public function createPrometheusDriver(): PrometheusDriver
+    {
+        return $this->container->make(PrometheusDriver::class);
     }
 }
