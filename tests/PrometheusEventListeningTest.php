@@ -14,8 +14,9 @@ class PrometheusEventListeningTest extends TestCase
     {
         event(new BasicPrometheusCounterEvent);
         \STS\Metrics\Facades\Metrics::flush();
+        $driver = app(\STS\Metrics\Drivers\PrometheusDriver::class);
 
-        $this->expectOutputString("# HELP Test_order_placed order_placed\n# TYPE Test_order_placed counter\nTest_order_placed{email=\"email\"} 5\n");
+        $this->assertEquals("# HELP app_order_placed order_placed\n# TYPE app_order_placed counter\napp_order_placed{source=\"email\"} 5\n", $driver->render());
     }
 }
 

@@ -43,6 +43,8 @@ class Metric
      */
     protected $resolution;
 
+    protected string $namespace = 'app';
+
     /**
      * Metric constructor.
      *
@@ -186,6 +188,16 @@ class Metric
         $this->driver = $driver;
 
         return $this;
+    }
+
+    public function setNamespace(string $namespace): void
+    {
+        $this->namespace = $namespace;
+    }
+
+    public function getNamespace(): string
+    {
+        return $this->namespace;
     }
 
     public function format(): mixed

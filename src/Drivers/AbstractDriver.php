@@ -58,6 +58,11 @@ abstract class AbstractDriver
         return $this;
     }
 
+    public function render(): string
+    {
+        return '';
+    }
+
     abstract public function format(Metric $metric);
 
     abstract public function flush(): static;
