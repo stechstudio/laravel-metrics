@@ -7,6 +7,9 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use InfluxDB\Client;
+use Prometheus\CollectorRegistry;
+use Prometheus\RenderTextFormat;
+use Prometheus\Storage\InMemory;
 use STS\Metrics\Contracts\ShouldReportMetric;
 use STS\Metrics\Drivers\CloudWatch;
 use STS\Metrics\Drivers\InfluxDB;
@@ -17,6 +20,7 @@ use Laravel\Lumen\Application as LumenApplication;
 use STS\Metrics\Adapters\InfluxDB1Adapter;
 use STS\Metrics\Adapters\InfluxDB2Adapter;
 use STS\Metrics\Drivers\PostHog;
+use STS\Metrics\Drivers\PrometheusDriver;
 use STS\Metrics\Octane\Listeners\FlushMetrics;
 
 /**
@@ -50,6 +54,10 @@ class MetricsServiceProvider extends ServiceProvider
 
         $this->app->singleton(PostHog::class, function () {
             return $this->createPostHogDriver($this->app['config']['metrics.backends.posthog']);
+        });
+
+        $this->app->singleton(PrometheusDriver::class, function () {
+            return $this->createPrometheusDriver($this->app['config']['metrics.backends.prometheus']);
         });
     }
 
@@ -235,5 +243,10 @@ class MetricsServiceProvider extends ServiceProvider
                 default => Str::random()
             }
         );
+    }
+
+    protected function createPrometheusDriver()
+    {
+        return new PrometheusDriver(new RenderTextFormat(), new CollectorRegistry(new InMemory(), false));
     }
 }

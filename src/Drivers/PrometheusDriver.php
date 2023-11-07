@@ -2,32 +2,43 @@
 
 namespace STS\Metrics\Drivers;
 
-use Prometheus\MetricFamilySamples;
+use Prometheus\Collector;
+use Prometheus\CollectorRegistry;
+use Prometheus\RendererInterface;
 use Prometheus\RenderTextFormat;
+use Prometheus\Storage\InMemory;
 use STS\Metrics\Metric;
 
 class PrometheusDriver extends AbstractDriver
 {
-    public function format(Metric $metric): array
+    public function __construct(protected RendererInterface $renderer, protected CollectorRegistry $registry)
     {
-        $renderer = new RenderTextFormat();
-        return [$renderer->render([new MetricFamilySamples([
-            'name' => $metric->getName(),
-            // TODO: Fix these hardcoded values
-            'type' => 'type',
-            'help' => 'help',
-            'labelNames' => [],
-            'samples' => [[
-                'name' => $metric->getName(),
-                'labelNames' => collect($metric->getTags())->keys()->toArray(),
-                'labelValues' => collect($metric->getTags())->values()->toArray(),
-                'value' => $metric->getValue(),
-            ]],
-        ])])];
+    }
+
+    public function format(Metric $metric): Collector
+    {
+        //TODO: Handle other metric types and exception
+        $counter = $this->registry->registerCounter('Test', $metric->getName(), $metric->getName(), $metric->getTags());
+        $counter->incBy($metric->getValue(), $metric->getTags());
+
+        return $counter;
     }
 
     public function flush(): static
     {
+        if (empty($this->getMetrics())) {
+            return $this;
+        }
+
+        collect($this->getMetrics())->each(function (Metric $metric) {
+            $this->format($metric);
+        });
+        $result = $this->renderer->render($this->registry->getMetricFamilySamples());
+        $this->metrics = [];
+
+        $this->registry->wipeStorage();
+
+        echo $result;
         return $this;
     }
 }

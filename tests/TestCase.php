@@ -98,4 +98,8 @@ class TestCase extends Orchestra\Testbench\TestCase
         }
     }
 
+    protected function setupPrometheus($config = [], $mock = true)
+    {
+        app('config')->set('metrics.default', 'prometheus');
+    }
 }
