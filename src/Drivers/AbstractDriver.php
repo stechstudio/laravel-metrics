@@ -58,9 +58,12 @@ abstract class AbstractDriver
         return $this;
     }
 
-    public function render(): string
+    /**
+     * Implement this, when the driver needs to expose metrics to be polled by a third party service such as prometheus
+     */
+    public function formatted(): mixed
     {
-        return '';
+        return null;
     }
 
     abstract public function format(Metric $metric);

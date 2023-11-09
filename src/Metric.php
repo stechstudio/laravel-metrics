@@ -45,6 +45,8 @@ class Metric
 
     protected string $namespace = 'app';
 
+    protected ?MetricType $type = null;
+
     /**
      * Metric constructor.
      *
@@ -203,5 +205,22 @@ class Metric
     public function format(): mixed
     {
         return $this->getDriver()->format($this);
+    }
+
+    public function formatted(): mixed
+    {
+        return $this->getDriver()->formatted();
+    }
+
+    public function getType(): ?MetricType
+    {
+        return $this->type;
+    }
+
+    public function setType(?MetricType $type): static
+    {
+        $this->type = $type;
+
+        return $this;
     }
 }
