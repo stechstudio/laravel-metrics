@@ -52,12 +52,13 @@ class PrometheusDriverTest extends TestCase
             ->setDriver($driver)
             ->setTags(['foo' => 'bar', 'test' => 1])
             ->setValue(5)
+            ->setDescription('description')
             ->add();
 
-        $this->assertEquals("# HELP app_file_uploaded file_uploaded\n# TYPE app_file_uploaded counter\napp_file_uploaded{foo=\"bar\",test=\"1\"} 5\n", $driver->formatted());
+        $this->assertEquals("# HELP app_file_uploaded description\n# TYPE app_file_uploaded counter\napp_file_uploaded{foo=\"bar\",test=\"1\"} 5\n", $driver->formatted());
 
         // Second format of all metrics produces the same result, no increment on the counter or flushing the registry
-        $this->assertEquals("# HELP app_file_uploaded file_uploaded\n# TYPE app_file_uploaded counter\napp_file_uploaded{foo=\"bar\",test=\"1\"} 5\n", $driver->formatted());
+        $this->assertEquals("# HELP app_file_uploaded description\n# TYPE app_file_uploaded counter\napp_file_uploaded{foo=\"bar\",test=\"1\"} 5\n", $driver->formatted());
 
         // flushing the driver wipes out all metrics and cleanups the underlying registry
         $driver->flush();

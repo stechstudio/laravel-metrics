@@ -28,40 +28,19 @@ class PrometheusDriver extends AbstractDriver
     public function format(Metric $metric): Collector
     {
         return match ($metric->getType()) {
-            MetricType::COUNTER => $this->formatCounter($metric),
-            MetricType::GAUGE => $this->formatGauge($metric),
+            MetricType::COUNTER => (function () use ($metric) {
+                $counter = $this->registry->getOrRegisterCounter($metric->getNamespace(), $metric->getName(), $metric->getDescription() ?? '', array_keys($metric->getTags()));
+                $counter->incBy($metric->getValue(), array_values($metric->getTags()));
+                return $counter;
+            })(),
+            MetricType::GAUGE => (function () use ($metric) {
+                $gauge = $this->registry->getOrRegisterGauge($metric->getNamespace(), $metric->getName(), $metric->getDescription() ?? '', array_keys($metric->getTags()));
+                $gauge->set($metric->getValue(), array_values($metric->getTags()));
+                return $gauge;
+            })(),
             default => throw new \UnhandledMatchError($metric->getType()),
         };
     }
-
-    /**
-     * @throws MetricsRegistrationException
-     */
-    private function formatCounter(Metric $metric): Counter
-    {
-        try {
-            $counter = $this->registry->getCounter($metric->getNamespace(), $metric->getName());
-        } catch (MetricNotFoundException) {
-            $counter = $this->registry->registerCounter($metric->getNamespace(), $metric->getName(), $metric->getDescription(), array_keys($metric->getTags()));
-        }
-        $counter->incBy($metric->getValue(), array_values($metric->getTags()));
-        return $counter;
-    }
-
-    /**
-     * @throws MetricsRegistrationException
-     */
-    private function formatGauge(Metric $metric): Gauge
-    {
-        try {
-            $gauge = $this->registry->getGauge($metric->getNamespace(), $metric->getName());
-        } catch (MetricNotFoundException) {
-            $gauge = $this->registry->registerGauge($metric->getNamespace(), $metric->getName(), $metric->getDescription(), array_keys($metric->getTags()));
-        }
-        $gauge->set($metric->getValue(), array_values($metric->getTags()));
-        return $gauge;
-    }
-
 
     public function flush(): static
     {
