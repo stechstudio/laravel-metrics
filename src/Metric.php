@@ -47,6 +47,8 @@ class Metric
 
     protected ?MetricType $type = null;
 
+    protected ?string $description = null;
+
     /**
      * Metric constructor.
      *
@@ -220,6 +222,18 @@ class Metric
     public function setType(?MetricType $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description = null): static
+    {
+        $this->description = $description;
 
         return $this;
     }

@@ -102,6 +102,15 @@ METRICS_BACKEND=null
 
 This `null` driver will simply discard any metrics.
 
+### Prometheus
+1. Install the InfluxDB PHP client: `composer require promphp/prometheus_client_php`
+2. Configuring the backend to use Prometheus, makes sense only if you have an endpoint to expose them. 
+Its purpose is only to format the registered metrics in a way that Prometheus can scrape them.
+
+```
+METRICS_BACKEND=prometheus
+```
+
 ## Sending an individual metric
 
 You can create metric by using the facade like this:
@@ -121,15 +130,18 @@ The only required attribute is the `name`, everything else is optional.
 
 This is how we are mapping metric attributes in our backends.
 
-| Metric attribute | PostHog           | InfluxDB      | CloudWatch        |
-|------------------|-------------------|---------------|-------------------|
-| name             | event             | measurement   | MetricName        |
-| value            | properties[value] | fields[value] | Value             |
-| unit             | _ignored_         | _ignored_     | Unit              |
-| resolution       | _ignored_         | _ignored_     | StorageResolution |
-| tags             | _ignored_         | tags          | Dimensions        |
-| extra            | properties        | fields        | _ignored_         |
-| timestamp        | _ignored_         | timestamp     | Timestamp         |
+| Metric attribute | PostHog           | InfluxDB      | CloudWatch        | Prometheus                                    |
+|------------------|-------------------|---------------|-------------------|-----------------------------------------------|
+| name             | event             | measurement   | MetricName        | name                                          |
+| value            | properties[value] | fields[value] | Value             | value                                         |
+| unit             | _ignored_         | _ignored_     | Unit              | _ignored_                                     |
+| resolution       | _ignored_         | _ignored_     | StorageResolution | _ignored_                                     |
+| tags             | _ignored_         | tags          | Dimensions        | keys -> labelNames<br/> values -> labelValues |
+| extra            | properties        | fields        | _ignored_         | _ignored_                                     |
+| timestamp        | _ignored_         | timestamp     | Timestamp         | _ignored_                                     |
+| description      | _ignored_         | _ignored_     | _ignored_         | help                                          |
+| namespace        | _ignored_         | _ignored_     | _ignored_         | namespace                                     |
+| type             | _ignored_         | _ignored_     | _ignored_         | used to register counter or gauge metric      |
 
 See the [CloudWatch docs](http://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_MetricDatum.html)
 and [InfluxDB docs](https://docs.influxdata.com/influxdb/latest/concepts/key_concepts/) for more information on their

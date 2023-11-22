@@ -20,7 +20,8 @@ trait ProvidesMetric
             ->setTags($this->getMetricTags())
             ->setExtra($this->getMetricExtra())
             ->setTimestamp($this->getMetricTimestamp())
-            ->setResolution($this->getMetricResolution());
+            ->setResolution($this->getMetricResolution())
+            ->setDescription($this->getMetricDescription());
     }
 
     public function getMetricName(): string
@@ -76,6 +77,13 @@ trait ProvidesMetric
     {
         return property_exists($this, 'metricType')
             ? $this->metricType
+            : null;
+    }
+
+    public function getMetricDescription(): ?string
+    {
+        return property_exists($this, 'metricDescription')
+            ? $this->metricDescription
             : null;
     }
 }
