@@ -15,7 +15,7 @@ class PrometheusEventListeningTest extends TestCase
         event(new BasicPrometheusCounterEvent);
 
         $driver = app(\STS\Metrics\Drivers\PrometheusDriver::class);
-        $this->assertEquals("# HELP app_order_placed order_placed\n# TYPE app_order_placed counter\napp_order_placed{Deployment=\"local\",tenant=\"develop\",source=\"email\"} 5\n", $driver->formatted());
+        $this->assertEquals("# HELP app_order_placed \n# TYPE app_order_placed counter\napp_order_placed{deployment=\"local\",tenant=\"develop\",source=\"email\"} 5\n", $driver->formatted());
 
         // flushing, wipes out the stored metrics
         \STS\Metrics\Facades\Metrics::flush();

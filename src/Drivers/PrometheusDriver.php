@@ -2,15 +2,15 @@
 
 namespace STS\Metrics\Drivers;
 
+use Illuminate\Support\Str;
 use Prometheus\Collector;
 use Prometheus\CollectorRegistry;
-use Prometheus\Counter;
-use Prometheus\Exception\MetricNotFoundException;
 use Prometheus\Exception\MetricsRegistrationException;
-use Prometheus\Gauge;
 use Prometheus\RendererInterface;
 use STS\Metrics\Metric;
+use STS\Metrics\MetricsServiceProvider;
 use STS\Metrics\MetricType;
+use UnhandledMatchError;
 
 /**
  * The idea of this driver is to use Prometheus\CollectorRegistry only to format the already collected metrics in prometheus format.
@@ -24,21 +24,25 @@ class PrometheusDriver extends AbstractDriver
 
     /**
      * @throws MetricsRegistrationException
+     * @throws UnhandledMatchError
      */
     public function format(Metric $metric): Collector
     {
+        $namespace = Str::snake($metric->getNamespace());
+        $name = Str::snake($metric->getName());
+        $labelKeys = array_map(fn ($tag) => Str::snake($tag) , array_keys($metric->getTags()));
         return match ($metric->getType()) {
-            MetricType::COUNTER => (function () use ($metric) {
-                $counter = $this->registry->getOrRegisterCounter($metric->getNamespace(), $metric->getName(), $metric->getDescription() ?? '', array_keys($metric->getTags()));
+            MetricType::COUNTER => (function () use ($namespace, $name, $labelKeys, $metric) {
+                $counter = $this->registry->getOrRegisterCounter($namespace, $name, $metric->getDescription() ?? '', $labelKeys);
                 $counter->incBy($metric->getValue(), array_values($metric->getTags()));
                 return $counter;
             })(),
-            MetricType::GAUGE => (function () use ($metric) {
-                $gauge = $this->registry->getOrRegisterGauge($metric->getNamespace(), $metric->getName(), $metric->getDescription() ?? '', array_keys($metric->getTags()));
+            MetricType::GAUGE => (function () use ($namespace, $name, $labelKeys, $metric) {
+                $gauge = $this->registry->getOrRegisterGauge($namespace, $name, $metric->getDescription() ?? '', $labelKeys);
                 $gauge->set($metric->getValue(), array_values($metric->getTags()));
                 return $gauge;
             })(),
-            default => throw new \UnhandledMatchError($metric->getType()),
+            default => throw new UnhandledMatchError($metric->getType()),
         };
     }
 
@@ -53,8 +57,12 @@ class PrometheusDriver extends AbstractDriver
      * Renders all collected metrics in prometheus format.
      * The result can be directly exposed on HTTP endpoint, for polling by Prometheus.
      *
+     * If execution is thrown no matter in the context of long-running process or http request,
+     * there are handlers in @see MetricsServiceProvider to call flush and clear the state
+     *
      * @return string
      * @throws MetricsRegistrationException
+     * @throws UnhandledMatchError
      */
     public function formatted(): string
     {
