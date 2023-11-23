@@ -92,6 +92,11 @@ AWS_ACCESS_KEY_ID=...
 AWS_SECRET_ACCESS_KEY=...
 ```
 
+### Prometheus
+1. Install the Prometheus PHP client: `composer require promphp/prometheus_client_php`
+2. Configuring the backend to use Prometheus, makes sense only if you have an endpoint to expose them.
+   Its purpose is only to format the registered metrics in a way that Prometheus can scrape them.
+
 ### NullDriver (for development)
 
 If you need to disable metrics just set the backend to null:
@@ -101,11 +106,6 @@ METRICS_BACKEND=null
 ```
 
 This `null` driver will simply discard any metrics.
-
-### Prometheus
-1. Install the InfluxDB PHP client: `composer require promphp/prometheus_client_php`
-2. Configuring the backend to use Prometheus, makes sense only if you have an endpoint to expose them. 
-Its purpose is only to format the registered metrics in a way that Prometheus can scrape them.
 
 ```
 METRICS_BACKEND=prometheus
