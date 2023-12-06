@@ -22,11 +22,7 @@
         "orchestra/testbench": "^8.0",
         "mockery/mockery": "^1.6",
         "aws/aws-sdk-php": "^3.2",
-        "influxdb/influxdb-php": "^1.15",
-        "posthog/posthog-php": "^3.0",
-        "influxdata/influxdb-client-php": "^3.4",
-        "guzzlehttp/guzzle": "^7.5",
-        "promphp/prometheus_client_php": "^2.3"
+        "guzzlehttp/guzzle": "^7.5"
     },
     "suggest": {
         "posthog/posthog-php": "PostHog integration",
