@@ -17,6 +17,10 @@ trait ComputesNanosecondTimestamps
             return $timestamp->getTimestamp() * 1000000000;
         }
 
+        if (is_null($timestamp) || (is_string($timestamp) && strlen($timestamp) < 10)) {
+           return $this->generateTimestamp();
+        }
+
         if (strlen($timestamp) == 19) {
             // Looks like it is already nanosecond precise!
             return $timestamp;
@@ -33,6 +37,14 @@ trait ComputesNanosecondTimestamps
         }
 
         // We weren't given a valid timestamp, generate.
+        return $this->generateTimestamp();
+    }
+
+    /**
+     * @return int
+     */
+    protected function generateTimestamp(): int
+    {
         return (int)(microtime(true) * 1000000000);
     }
 }
