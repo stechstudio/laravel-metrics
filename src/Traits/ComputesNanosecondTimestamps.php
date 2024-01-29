@@ -17,21 +17,23 @@ trait ComputesNanosecondTimestamps
             return $timestamp->getTimestamp() * 1000000000;
         }
 
-        if (is_null($timestamp) || (is_string($timestamp) && strlen($timestamp) < 10)) {
+        $length = is_string($timestamp) ? strlen($timestamp) : 0;
+
+        if (is_null($timestamp) || $length < 10) {
            return $this->generateTimestamp();
         }
 
-        if (strlen($timestamp) == 19) {
+        if ($length === 19) {
             // Looks like it is already nanosecond precise!
             return $timestamp;
         }
 
-        if (strlen($timestamp) == 10) {
+        if ($length === 10) {
             // This appears to be in seconds
             return $timestamp * 1000000000;
         }
 
-        if (preg_match("/\d{10}\.\d{4}/", $timestamp)) {
+        if (preg_match("/\d{10}\.\d{1,4}$/", $timestamp)) {
             // This looks like a microtime float
             return (int)($timestamp * 1000000000);
         }
