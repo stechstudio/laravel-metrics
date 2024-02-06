@@ -42,7 +42,7 @@ trait ComputesNanosecondTimestamps
                 };
             }
         } elseif (is_float($timestamp)) {
-            $integerLength = strlen((string)(int) $timestamp);
+            $integerLength = (int) floor(log10(abs($timestamp))) + 1;
 
             return match ($integerLength) {
                 // Looks like it is already nanosecond precise!

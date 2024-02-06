@@ -99,6 +99,10 @@ class InfluxDBV2DriverTest extends TestCase
             [15087137281,], // 11 digits
             [150871372,], // 9 digits
             [15087137,], // 8 digits
+            [0,],
+            [0.0,],
+            ['000000000.1',],
+            ['000000000.0',],
         ];
     }
 }
