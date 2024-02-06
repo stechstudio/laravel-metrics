@@ -25,15 +25,80 @@ class InfluxDBV2DriverTest extends TestCase
         );
     }
 
-    public function testNanoSecondTimestamp()
+    /**
+     * @dataProvider nanoSecondTimestampInvalid
+     */
+    public function testNanoSecondTimestampInvalid($input)
     {
         $this->setupInfluxDB();
 
         $influx = app(InfluxDB::class);
 
-        $this->assertEquals(1508713728000000000, $influx->getNanoSecondTimestamp(1508713728000000000));
-        $this->assertEquals(1508713728000000000, $influx->getNanoSecondTimestamp(1508713728));
-        $this->assertEquals(1508713728000000000, $influx->getNanoSecondTimestamp(new \DateTime('@1508713728')));
+        $now = $influx->getNanoSecondTimestamp();
+        $result = $influx->getNanoSecondTimestamp($input);
+
+        $this->assertTrue(is_int($result));
+        $this->assertEquals(19, strlen((string) $result));
+        $this->assertGreaterThanOrEqual($now, $result);
     }
 
+    /**
+     * @dataProvider nanoSecondTimestampValid
+     */
+    public function testNanoSecondTimestamp($expected, $input)
+    {
+        $this->setupInfluxDB();
+
+        $influx = app(InfluxDB::class);
+
+        $result = $influx->getNanoSecondTimestamp($input);
+
+        $this->assertTrue(is_int($result));
+        $this->assertEquals(19, strlen((string) $result));
+        $this->assertEquals($expected, $result);
+    }
+
+    public static function nanoSecondTimestampValid()
+    {
+        $expected = 1508713728000000000;
+        $expectedPrecise = 1508713728123400000;
+
+        return [
+            [$expected, 1508713728000000000,],
+            [$expected, 1508713728,],
+            [$expected, '1508713728000000000',],
+            [$expected, '1508713728',],
+            [$expected, new \DateTime('@1508713728'),],
+            [$expected, '1508713728.0000',],
+            [$expected, '1508713728.000',],
+            [$expected, '1508713728.00',],
+            [$expected, '1508713728.0',],
+            [$expected, 1508713728.0000,],
+            [$expected, 1508713728.000,],
+            [$expected, 1508713728.00,],
+            [$expected, 1508713728.0,],
+            [$expectedPrecise, 1508713728123400000,],
+            [$expectedPrecise, '1508713728123400000',],
+            // [$expectedPrecise, '1508713728.1234',], // PHP float precision breaks this
+            // [1508713728123000000, '1508713728.123',], // PHP float precision breaks this
+            [1508713728120000000, '1508713728.12',],
+            [1508713728100000000, '1508713728.1',],
+            // [1508713728123400000, 1508713728.1234,], // PHP float precision breaks this
+            // [1508713728123000000, 1508713728.123,], // PHP float precision breaks this
+            [1508713728120000000, 1508713728.12,],
+            [1508713728100000000, 1508713728.1,],
+        ];
+    }
+
+    public static function nanoSecondTimestampInvalid()
+    {
+        return [
+            ['abc'], // letters
+            ['150871372800000000a',], // numbers with letters
+            [150871372800000000,], // 18 digits
+            [15087137281,], // 11 digits
+            [150871372,], // 9 digits
+            [15087137,], // 8 digits
+        ];
+    }
 }
