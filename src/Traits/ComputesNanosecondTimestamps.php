@@ -4,6 +4,8 @@ namespace STS\Metrics\Traits;
 
 trait ComputesNanosecondTimestamps
 {
+    protected const TO_NANO = 1000000000;
+
     /**
      * A public way tog et the nanosecond precision we desire.
      *
@@ -14,25 +16,52 @@ trait ComputesNanosecondTimestamps
     public function getNanoSecondTimestamp($timestamp = null)
     {
         if ($timestamp instanceof \DateTime) {
-            return $timestamp->getTimestamp() * 1000000000;
-        }
+            return $timestamp->getTimestamp() * self::TO_NANO;
+        } elseif (is_int($timestamp)) {
+            $length = strlen((string) $timestamp);
 
-        if (strlen($timestamp) == 19) {
-            // Looks like it is already nanosecond precise!
-            return $timestamp;
-        }
+            return match ($length) {
+                // Looks like it is already nanosecond precise!
+                19 => $timestamp,
+                // This appears to be in seconds
+                10 => $timestamp * self::TO_NANO,
+                default => $this->generateTimestamp(),
+            };
+        } elseif (is_string($timestamp)) {
+            if (preg_match("/\d{10}\.\d{1,4}$/", $timestamp)) {
+                return (int) ($timestamp * self::TO_NANO);
+            } elseif (ctype_digit($timestamp)) {
+                $length = strlen($timestamp);
 
-        if (strlen($timestamp) == 10) {
-            // This appears to be in seconds
-            return $timestamp * 1000000000;
-        }
+                return match ($length) {
+                    // Looks like it is already nanosecond precise!
+                    19 => (int) $timestamp,
+                    // This appears to be in seconds
+                    10 => (int) ($timestamp * self::TO_NANO),
+                    default => $this->generateTimestamp(),
+                };
+            }
+        } elseif (is_float($timestamp)) {
+            $integerLength = (int) floor(log10(abs($timestamp))) + 1;
 
-        if (preg_match("/\d{10}\.\d{4}/", $timestamp)) {
-            // This looks like a microtime float
-            return (int)($timestamp * 1000000000);
+            return match ($integerLength) {
+                // Looks like it is already nanosecond precise!
+                19 => (int) $timestamp,
+                // This appears to be in seconds
+                10 => (int) ($timestamp * self::TO_NANO),
+                default => $this->generateTimestamp(),
+            };
         }
 
         // We weren't given a valid timestamp, generate.
-        return (int)(microtime(true) * 1000000000);
+        return $this->generateTimestamp();
+    }
+
+    /**
+     * @return int
+     */
+    protected function generateTimestamp(): int
+    {
+        return (int) (microtime(true) * self::TO_NANO);
     }
 }
