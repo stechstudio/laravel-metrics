@@ -4,6 +4,7 @@ namespace STS\Metrics\Traits;
 
 use Illuminate\Support\Str;
 use STS\Metrics\Metric;
+use STS\Metrics\MetricType;
 
 trait ProvidesMetric
 {
@@ -13,12 +14,14 @@ trait ProvidesMetric
     public function createMetric(): Metric
     {
         return (new Metric($this->getMetricName()))
+            ->setType($this->getMetricType())
             ->setValue($this->getMetricValue())
             ->setUnit($this->getMetricUnit())
             ->setTags($this->getMetricTags())
             ->setExtra($this->getMetricExtra())
             ->setTimestamp($this->getMetricTimestamp())
-            ->setResolution($this->getMetricResolution());
+            ->setResolution($this->getMetricResolution())
+            ->setDescription($this->getMetricDescription());
     }
 
     public function getMetricName(): string
@@ -67,6 +70,20 @@ trait ProvidesMetric
     {
         return property_exists($this, 'metricResolution')
             ? $this->metricResolution
+            : null;
+    }
+
+    public function getMetricType(): ?MetricType
+    {
+        return property_exists($this, 'metricType')
+            ? $this->metricType
+            : null;
+    }
+
+    public function getMetricDescription(): ?string
+    {
+        return property_exists($this, 'metricDescription')
+            ? $this->metricDescription
             : null;
     }
 }

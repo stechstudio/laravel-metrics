@@ -43,6 +43,12 @@ class Metric
      */
     protected $resolution;
 
+    protected string $namespace = 'app';
+
+    protected ?MetricType $type = null;
+
+    protected ?string $description = null;
+
     /**
      * Metric constructor.
      *
@@ -188,8 +194,47 @@ class Metric
         return $this;
     }
 
+    public function setNamespace(string $namespace): void
+    {
+        $this->namespace = $namespace;
+    }
+
+    public function getNamespace(): string
+    {
+        return $this->namespace;
+    }
+
     public function format(): mixed
     {
         return $this->getDriver()->format($this);
+    }
+
+    public function formatted(): mixed
+    {
+        return $this->getDriver()->formatted();
+    }
+
+    public function getType(): ?MetricType
+    {
+        return $this->type;
+    }
+
+    public function setType(?MetricType $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description = null): static
+    {
+        $this->description = $description;
+
+        return $this;
     }
 }
