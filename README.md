@@ -97,6 +97,10 @@ AWS_SECRET_ACCESS_KEY=...
 2. Configuring the backend to use Prometheus, makes sense only if you have an endpoint to expose them.
    Its purpose is only to format the registered metrics in a way that Prometheus can scrape them.
 
+```
+METRICS_BACKEND=prometheus
+```
+
 ### NullDriver (for development)
 
 If you need to disable metrics just set the backend to null:
@@ -106,10 +110,6 @@ METRICS_BACKEND=null
 ```
 
 This `null` driver will simply discard any metrics.
-
-```
-METRICS_BACKEND=prometheus
-```
 
 ## Sending an individual metric
 
