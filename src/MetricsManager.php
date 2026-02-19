@@ -18,6 +18,15 @@ class MetricsManager extends Manager
 {
     protected $driverCreatedCallback = null;
 
+    protected ?\Closure $userIdResolver = null;
+
+    public function resolveUserIdWith(\Closure $resolver): static
+    {
+        $this->userIdResolver = $resolver;
+
+        return $this;
+    }
+
     public function whenDriverCreated(callable $callback)
     {
         $this->driverCreatedCallback = $callback;
@@ -35,6 +44,10 @@ class MetricsManager extends Manager
     protected function createDriver($driver)
     {
         $driver = parent::createDriver($driver);
+
+        if($this->userIdResolver) {
+            $driver->resolveUserIdWith($this->userIdResolver);
+        }
 
         if($this->driverCreatedCallback) {
             call_user_func($this->driverCreatedCallback, $driver);
