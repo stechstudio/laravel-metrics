@@ -10,7 +10,7 @@ abstract class AbstractDriver
 
     protected array $tags = [];
 
-    protected array $extra = [];
+    protected array|\Closure $extra = [];
 
     public function create(string $name, $value = null): Metric
     {
@@ -48,10 +48,15 @@ abstract class AbstractDriver
         return $this;
     }
 
+    public function getExtra(): array
+    {
+        return value($this->extra);
+    }
+
     /**
      * Set default extra to be merged in on all metrics
      */
-    public function setExtra(array $extra): static
+    public function setExtra(array|\Closure $extra): static
     {
         $this->extra = $extra;
 

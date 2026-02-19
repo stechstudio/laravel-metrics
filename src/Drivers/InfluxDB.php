@@ -35,7 +35,7 @@ class InfluxDB extends AbstractDriver
                 $measurement,
                 $value,
                 array_merge($this->tags, $tags),
-                array_merge($this->extra, $fields),
+                array_merge($this->getExtra(), $fields),
                 $timestamp
             )
         );
@@ -77,7 +77,7 @@ class InfluxDB extends AbstractDriver
             $metric->getName(),
             $metric->getValue() ?? 1,
             array_merge($this->tags, $metric->getTags()),
-            array_merge($this->extra, $metric->getExtra()),
+            array_merge($this->getExtra(), $metric->getExtra()),
             $metric->getTimestamp()
         );
     }

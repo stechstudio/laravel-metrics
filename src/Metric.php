@@ -31,7 +31,7 @@ class Metric
      */
     protected $tags = [];
     /**
-     * @var array
+     * @var array|\Closure
      */
     protected $extra = [];
     /**
@@ -149,10 +149,10 @@ class Metric
 
     public function getExtra(): array
     {
-        return $this->extra;
+        return value($this->extra);
     }
 
-    public function setExtra(array $extra): static
+    public function setExtra(array|\Closure $extra): static
     {
         $this->extra = $extra;
 
@@ -161,6 +161,7 @@ class Metric
 
     public function addExtra($key, $value): static
     {
+        $this->extra = value($this->extra);
         $this->extra[$key] = $value;
 
         return $this;
