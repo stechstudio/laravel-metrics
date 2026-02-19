@@ -44,7 +44,7 @@ class PostHog extends AbstractDriver
                 $metric->getValue()
                     ? ['value' => $metric->getValue()]
                     : [],
-                $this->extra,
+                $this->getExtra(),
                 $metric->getExtra()
             ),
         ];

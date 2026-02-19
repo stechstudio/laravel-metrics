@@ -53,6 +53,37 @@ class MetricTest extends TestCase
         $this->assertInstanceOf(\DateTime::class, Metrics::getMetrics()[0]->getTimestamp());
     }
 
+    public function testSetExtraWithClosure()
+    {
+        $metric = new Metric("my_metric", 1);
+        $metric->setExtra(fn() => ['foo' => 'bar']);
+
+        $this->assertEquals(['foo' => 'bar'], $metric->getExtra());
+    }
+
+    public function testClosureIsEvaluatedEachTime()
+    {
+        $counter = 0;
+
+        $metric = new Metric("my_metric", 1);
+        $metric->setExtra(function () use (&$counter) {
+            $counter++;
+            return ['count' => $counter];
+        });
+
+        $this->assertEquals(['count' => 1], $metric->getExtra());
+        $this->assertEquals(['count' => 2], $metric->getExtra());
+    }
+
+    public function testAddExtraAfterClosureSet()
+    {
+        $metric = new Metric("my_metric", 1);
+        $metric->setExtra(fn() => ['foo' => 'bar']);
+        $metric->addExtra('baz', 'qux');
+
+        $this->assertEquals(['foo' => 'bar', 'baz' => 'qux'], $metric->getExtra());
+    }
+
     public function testGivenTimestampIsntChanged()
     {
         $metric = new Metric('my_metric', 1);
