@@ -64,8 +64,8 @@ class PostHogDriverTest extends TestCase
         $formatted1 = $driver->format($metric1);
         $formatted2 = $driver->format($metric2);
 
-        $this->assertEquals('user_1', $formatted1['distinctId']);
-        $this->assertEquals('user_2', $formatted2['distinctId']);
+        $this->assertEquals('user:user_1', $formatted1['distinctId']);
+        $this->assertEquals('user:user_2', $formatted2['distinctId']);
     }
 
     public function testCustomUserIdResolver()
@@ -78,17 +78,29 @@ class PostHogDriverTest extends TestCase
         $metric = new \STS\Metrics\Metric("file_uploaded");
         $formatted = $driver->format($metric);
 
-        $this->assertEquals('custom-user-42', $formatted['distinctId']);
+        $this->assertEquals('user:custom-user-42', $formatted['distinctId']);
     }
 
-    public function testUserIdIsNullWithoutResolver()
+    public function testDefaultUserIdWithoutResolver()
     {
         $driver = new PostHog();
 
         $metric = new \STS\Metrics\Metric("test");
         $formatted = $driver->format($metric);
 
-        $this->assertNull($formatted['distinctId']);
+        // Without auth or session, falls back to a random string
+        $this->assertNotEmpty($formatted['distinctId']);
+    }
+
+    public function testDistinctPrefix()
+    {
+        $driver = new PostHog('user:');
+        $driver->resolveUserIdWith(fn() => '42');
+
+        $metric = new \STS\Metrics\Metric("test");
+        $formatted = $driver->format($metric);
+
+        $this->assertEquals('user:42', $formatted['distinctId']);
     }
 
     public function testNoDefaultValue()
