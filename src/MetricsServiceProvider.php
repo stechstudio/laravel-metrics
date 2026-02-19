@@ -236,13 +236,19 @@ class MetricsServiceProvider extends ServiceProvider
             'host' => $config['host'],
         ]);
 
-        return new PostHog(
-            match(true) {
+        $driver = new PostHog();
+
+        $driver->resolveUserIdWith(function () use ($config) {
+            static $anonymousId = null;
+
+            return match(true) {
                 auth()->check() => $config['distinct_prefix'] . auth()->id(),
                 session()->isStarted() => sha1(session()->getId()),
-                default => Str::random()
-            }
-        );
+                default => $anonymousId ??= Str::random()
+            };
+        });
+
+        return $driver;
     }
 
     protected function createPrometheusDriver()

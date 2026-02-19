@@ -63,6 +63,22 @@ abstract class AbstractDriver
         return $this;
     }
 
+    protected ?\Closure $userIdResolver = null;
+
+    public function resolveUserIdWith(\Closure $resolver): static
+    {
+        $this->userIdResolver = $resolver;
+
+        return $this;
+    }
+
+    public function getUserId(): mixed
+    {
+        return $this->userIdResolver
+            ? call_user_func($this->userIdResolver)
+            : null;
+    }
+
     /**
      * Implement this, when the driver needs to expose metrics to be polled by a third party service such as prometheus
      */
