@@ -47,6 +47,72 @@ class PostHogDriverTest extends TestCase
         $this->assertEquals('driver_value', $formatted['properties']['driver_key']);
     }
 
+    public function testUserIdResolvedLazily()
+    {
+        $this->setupPostHog();
+
+        $callCount = 0;
+        $driver = app(PostHog::class);
+        $driver->resolveUserIdWith(function () use (&$callCount) {
+            $callCount++;
+            return 'user_' . $callCount;
+        });
+
+        $metric1 = new \STS\Metrics\Metric("event_one");
+        $metric2 = new \STS\Metrics\Metric("event_two");
+
+        $formatted1 = $driver->format($metric1);
+        $formatted2 = $driver->format($metric2);
+
+        $this->assertEquals('user_1', $formatted1['distinctId']);
+        $this->assertEquals('user_2', $formatted2['distinctId']);
+    }
+
+    public function testCustomUserIdResolver()
+    {
+        $this->setupPostHog();
+
+        $driver = app(PostHog::class);
+        $driver->resolveUserIdWith(fn() => 'custom-user-42');
+
+        $metric = new \STS\Metrics\Metric("file_uploaded");
+        $formatted = $driver->format($metric);
+
+        $this->assertEquals('custom-user-42', $formatted['distinctId']);
+    }
+
+    public function testDefaultUserIdWithoutResolver()
+    {
+        $driver = new PostHog();
+
+        $metric = new \STS\Metrics\Metric("test");
+        $formatted = $driver->format($metric);
+
+        // Without auth or session, falls back to a random string
+        $this->assertNotEmpty($formatted['distinctId']);
+    }
+
+    public function testDistinctPrefixAppliesWithDefaultResolver()
+    {
+        $driver = new PostHog('user:');
+
+        $metric = new \STS\Metrics\Metric("test");
+        $formatted = $driver->format($metric);
+
+        $this->assertStringStartsWith('user:', $formatted['distinctId']);
+    }
+
+    public function testDistinctPrefixSkippedWithCustomResolver()
+    {
+        $driver = new PostHog('user:');
+        $driver->resolveUserIdWith(fn() => '42');
+
+        $metric = new \STS\Metrics\Metric("test");
+        $formatted = $driver->format($metric);
+
+        $this->assertEquals('42', $formatted['distinctId']);
+    }
+
     public function testNoDefaultValue()
     {
         $this->setupPostHog();

@@ -245,3 +245,55 @@ class OrderReceived implements ShouldReportMetric {
     }
 }
 ```
+
+## Default tags and extra data
+
+You can set default tags and extra data on the driver that will be merged into every metric:
+
+```php
+Metrics::setTags(['environment' => 'production']);
+Metrics::setExtra(['server' => 'web-01']);
+```
+
+### Dynamic extra data with closures
+
+If you need extra data that is evaluated at the time each metric is dispatched (rather than when it's initially set), you can pass a closure:
+
+```php
+Metrics::setExtra(fn() => [
+    'memory' => memory_get_usage(),
+    'cpu' => sys_getloadavg()[0],
+]);
+```
+
+The closure will be called fresh each time a metric is formatted. This also works on individual metrics:
+
+```php
+(new Metric('my_metric'))
+    ->setExtra(fn() => ['memory' => memory_get_usage()])
+    ->add();
+```
+
+## User ID resolution
+
+Drivers automatically resolve the current user ID using the following strategy:
+
+1. If a user is authenticated: `auth()->id()`
+2. If a session is active: a hashed session ID
+3. Otherwise: a random string (stable for the lifetime of the process)
+
+This is used by the PostHog driver as the `distinctId`, and is available to any driver via `$driver->getUserId()`.
+
+### Custom user ID resolver
+
+You can override the default resolution by providing your own closure:
+
+```php
+Metrics::resolveUserIdWith(fn() => auth()->id());
+```
+
+This will apply to all drivers. You can also set it on a specific driver:
+
+```php
+Metrics::driver('posthog')->resolveUserIdWith(fn() => $team->id);
+```

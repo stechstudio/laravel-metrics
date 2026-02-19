@@ -8,7 +8,7 @@ use PostHog\PostHog AS PostHogClient;
 
 class PostHog extends AbstractDriver
 {
-    public function __construct(protected $distinctId)
+    public function __construct(protected string $distinctPrefix = '')
     {
     }
 
@@ -38,7 +38,7 @@ class PostHog extends AbstractDriver
     public function format(Metric $metric): array
     {
         return [
-            'distinctId' => $this->distinctId,
+            'distinctId' => $this->getUserId(),
             'event' => $metric->getName(),
             'properties' => array_merge(
                 $metric->getValue()
@@ -48,6 +48,15 @@ class PostHog extends AbstractDriver
                 $metric->getExtra()
             ),
         ];
+    }
+
+    public function getUserId(): mixed
+    {
+        if ($this->userIdResolver) {
+            return call_user_func($this->userIdResolver);
+        }
+
+        return $this->distinctPrefix . parent::getUserId();
     }
 
     /**

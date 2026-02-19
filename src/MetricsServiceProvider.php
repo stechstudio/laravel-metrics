@@ -236,13 +236,7 @@ class MetricsServiceProvider extends ServiceProvider
             'host' => $config['host'],
         ]);
 
-        return new PostHog(
-            match(true) {
-                auth()->check() => $config['distinct_prefix'] . auth()->id(),
-                session()->isStarted() => sha1(session()->getId()),
-                default => Str::random()
-            }
-        );
+        return new PostHog($config['distinct_prefix'] ?? '');
     }
 
     protected function createPrometheusDriver()

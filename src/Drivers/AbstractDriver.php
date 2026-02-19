@@ -2,6 +2,7 @@
 
 namespace STS\Metrics\Drivers;
 
+use Illuminate\Support\Str;
 use STS\Metrics\Metric;
 
 abstract class AbstractDriver
@@ -61,6 +62,30 @@ abstract class AbstractDriver
         $this->extra = $extra;
 
         return $this;
+    }
+
+    protected ?\Closure $userIdResolver = null;
+
+    public function resolveUserIdWith(\Closure $resolver): static
+    {
+        $this->userIdResolver = $resolver;
+
+        return $this;
+    }
+
+    public function getUserId(): mixed
+    {
+        if ($this->userIdResolver) {
+            return call_user_func($this->userIdResolver);
+        }
+
+        static $anonymousId = null;
+
+        return match(true) {
+            auth()->check() => auth()->id(),
+            session()->isStarted() => sha1(session()->getId()),
+            default => $anonymousId ??= Str::random()
+        };
     }
 
     /**
