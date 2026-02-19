@@ -45,6 +45,39 @@ class InfluxDBDriverTest extends TestCase
         $this->assertEquals('"extra_value"', $point->getFields()['extra1']);
     }
 
+    public function testDefaultExtraWithClosure()
+    {
+        $this->setupInfluxDB();
+
+        $driver = app(InfluxDB::class);
+
+        $driver->setExtra(fn() => ['extra1' => 'extra_value']);
+
+        $metric = (new \STS\Metrics\Metric("my_metric"))
+            ->setTags(['foo' => 'bar']);
+
+        $point = $driver->format($metric);
+
+        $this->assertCount(2, $point->getFields());
+        $this->assertEquals('"extra_value"', $point->getFields()['extra1']);
+    }
+
+    public function testMetricExtraWithClosure()
+    {
+        $this->setupInfluxDB();
+
+        $driver = app(InfluxDB::class);
+
+        $metric = (new \STS\Metrics\Metric("my_metric"))
+            ->setExtra(fn() => ['extra1' => 'extra_value'])
+            ->setTags(['foo' => 'bar']);
+
+        $point = $driver->format($metric);
+
+        $this->assertCount(2, $point->getFields());
+        $this->assertEquals('"extra_value"', $point->getFields()['extra1']);
+    }
+
     public function testPassthru()
     {
         $this->setupInfluxDB(['database' => 'dbname'], false);

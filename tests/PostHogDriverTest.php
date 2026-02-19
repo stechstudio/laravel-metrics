@@ -19,6 +19,34 @@ class PostHogDriverTest extends TestCase
 
     }
 
+    public function testFormatWithClosureExtra()
+    {
+        $this->setupPostHog();
+
+        $metric = (new \STS\Metrics\Metric("file_uploaded"))
+            ->setExtra(fn() => ["foo" => "bar"])
+            ->setValue(5);
+
+        $formatted = app(PostHog::class)->format($metric);
+
+        $this->assertEquals('bar', $formatted['properties']['foo']);
+        $this->assertEquals(5, $formatted['properties']['value']);
+    }
+
+    public function testDriverExtraWithClosure()
+    {
+        $this->setupPostHog();
+
+        $driver = app(PostHog::class);
+        $driver->setExtra(fn() => ['driver_key' => 'driver_value']);
+
+        $metric = (new \STS\Metrics\Metric("file_uploaded"));
+
+        $formatted = $driver->format($metric);
+
+        $this->assertEquals('driver_value', $formatted['properties']['driver_key']);
+    }
+
     public function testNoDefaultValue()
     {
         $this->setupPostHog();
