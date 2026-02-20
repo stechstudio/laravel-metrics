@@ -29,11 +29,11 @@ class CloudWatch extends AbstractDriver
 
     public function flush(): static
     {
-        $this->flushMetricLogs();
-
         if (!count($this->getMetrics())) {
             return $this;
         }
+
+        $this->flushMetricLogs();
 
         $this->send($this->getMetrics());
 

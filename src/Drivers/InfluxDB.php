@@ -53,11 +53,11 @@ class InfluxDB extends AbstractDriver
      */
     public function flush(): static
     {
-        $this->flushMetricLogs();
-
         if (empty($this->getMetrics())) {
             return $this;
         }
+
+        $this->flushMetricLogs();
 
         $this->send($this->getMetrics());
         $this->metrics = [];

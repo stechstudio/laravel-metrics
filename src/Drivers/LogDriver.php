@@ -26,11 +26,11 @@ class LogDriver extends AbstractDriver
 
     public function flush(): static
     {
-        $this->flushMetricLogs();
-
         if (!count($this->getMetrics())) {
             return $this;
         }
+
+        $this->flushMetricLogs();
 
         $formatted = array_map([$this, 'format'], $this->getMetrics());
 

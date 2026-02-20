@@ -14,6 +14,10 @@ class PostHog extends AbstractDriver
 
     public function flush(): static
     {
+        if (empty($this->getMetrics())) {
+            return $this;
+        }
+
         $this->flushMetricLogs();
 
         foreach ($this->getMetrics() as $metric) {
