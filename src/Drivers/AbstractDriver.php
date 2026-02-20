@@ -79,15 +79,17 @@ abstract class AbstractDriver
             return call_user_func($this->userIdResolver, $this);
         }
 
-        return match(true) {
-            auth()->check() => auth()->id(),
-            session()->isStarted() => sha1(session()->getId()),
-            default => $this->getAnonymousId()
-        };
+        return auth()->check()
+            ? auth()->id()
+            : $this->getAnonymousId();
     }
 
     public function getAnonymousId(): string
     {
+        if (session()->isStarted()) {
+            return sha1(session()->getId());
+        }
+
         static $anonymousId = null;
 
         return $anonymousId ??= Str::random();

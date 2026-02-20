@@ -276,11 +276,10 @@ The closure will be called fresh each time a metric is formatted. This also work
 
 ## User ID resolution
 
-Drivers automatically resolve the current user ID using the following strategy:
+Drivers automatically resolve the current user ID via `getUserId()`:
 
 1. If a user is authenticated: `auth()->id()`
-2. If a session is active: a hashed session ID
-3. Otherwise: a random string (stable for the lifetime of the process)
+2. Otherwise: `getAnonymousId()`, which returns a hashed session ID if a session is active, or a random string (stable for the lifetime of the process)
 
 This is used by the PostHog driver as the `distinctId`, and is available to any driver via `$driver->getUserId()`.
 
