@@ -26,6 +26,8 @@ class LogDriver extends AbstractDriver
 
     public function flush(): static
     {
+        $this->flushMetricLogs();
+
         if (!count($this->getMetrics())) {
             return $this;
         }

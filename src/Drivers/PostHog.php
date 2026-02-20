@@ -12,24 +12,16 @@ class PostHog extends AbstractDriver
     {
     }
 
-    /**
-     * Note we are NOT enqueueing metrics on our own with PostHog. It queues internally
-     * and batches sends as it sees fit. Our best bet is to let PostHog do its thing.
-     * @throws Exception
-     */
-    public function add(Metric $metric): static
-    {
-        PostHogClient::capture($this->format($metric));
-
-        return $this;
-    }
-
-    /**
-     * PostHog sends batches automatically on __destruct, this really isn't necessary.
-     * But we're including it in case you ever want to force send earlier on.
-     */
     public function flush(): static
     {
+        $this->flushMetricLogs();
+
+        foreach ($this->getMetrics() as $metric) {
+            PostHogClient::capture($this->format($metric));
+        }
+
+        $this->metrics = [];
+
         PostHogClient::flush();
 
         return $this;

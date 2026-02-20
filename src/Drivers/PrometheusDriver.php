@@ -48,6 +48,8 @@ class PrometheusDriver extends AbstractDriver
 
     public function flush(): static
     {
+        $this->flushMetricLogs();
+
         $this->metrics = [];
         $this->registry->wipeStorage();
         return $this;

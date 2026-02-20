@@ -103,6 +103,19 @@ abstract class AbstractDriver
         return null;
     }
 
+    protected function flushMetricLogs(): void
+    {
+        foreach ($this->metrics as $metric) {
+            if ($metric->getLogMessage()) {
+                app('log')->log(
+                    $metric->getLogLevel(),
+                    $metric->getLogMessage(),
+                    array_merge(['event' => $metric->getName()], $metric->getExtra())
+                );
+            }
+        }
+    }
+
     abstract public function format(Metric $metric);
 
     abstract public function flush(): static;

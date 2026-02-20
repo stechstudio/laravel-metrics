@@ -49,6 +49,10 @@ class Metric
 
     protected ?string $description = null;
 
+    protected ?string $logMessage = null;
+
+    protected string $logLevel = 'info';
+
     /**
      * Metric constructor.
      *
@@ -149,7 +153,13 @@ class Metric
 
     public function getExtra(): array
     {
-        return value($this->extra);
+        $extra = value($this->extra);
+
+        if ($this->logMessage) {
+            $extra['message'] = $this->logMessage;
+        }
+
+        return $extra;
     }
 
     public function setExtra(array|\Closure $extra): static
@@ -165,6 +175,24 @@ class Metric
         $this->extra[$key] = $value;
 
         return $this;
+    }
+
+    public function withLog(string $message, string $level = 'info'): static
+    {
+        $this->logMessage = $message;
+        $this->logLevel = $level;
+
+        return $this;
+    }
+
+    public function getLogMessage(): ?string
+    {
+        return $this->logMessage;
+    }
+
+    public function getLogLevel(): string
+    {
+        return $this->logLevel;
     }
 
     public function getTimestamp(): mixed
