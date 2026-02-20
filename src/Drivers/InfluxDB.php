@@ -57,6 +57,8 @@ class InfluxDB extends AbstractDriver
             return $this;
         }
 
+        $this->flushMetricLogs();
+
         $this->send($this->getMetrics());
         $this->metrics = [];
 

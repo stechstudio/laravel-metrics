@@ -30,6 +30,8 @@ class LogDriver extends AbstractDriver
             return $this;
         }
 
+        $this->flushMetricLogs();
+
         $formatted = array_map([$this, 'format'], $this->getMetrics());
 
         $this->logger->info("Metrics", $formatted);

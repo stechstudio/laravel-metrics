@@ -84,6 +84,57 @@ class MetricTest extends TestCase
         $this->assertEquals(['foo' => 'bar', 'baz' => 'qux'], $metric->getExtra());
     }
 
+    public function testWithLogStoresMessageAndLevel()
+    {
+        $metric = new Metric("my_metric", 1);
+        $metric->withLog("Something happened", "warning");
+
+        $this->assertEquals("Something happened", $metric->getLogMessage());
+        $this->assertEquals("warning", $metric->getLogLevel());
+    }
+
+    public function testWithLogDefaultsToInfo()
+    {
+        $metric = new Metric("my_metric", 1);
+        $metric->withLog("Something happened");
+
+        $this->assertEquals("info", $metric->getLogLevel());
+    }
+
+    public function testWithLogAddsMessageToExtra()
+    {
+        $metric = new Metric("my_metric", 1);
+        $metric->setExtra(['key' => 'value']);
+        $metric->withLog("Something happened");
+
+        $extra = $metric->getExtra();
+
+        $this->assertEquals('value', $extra['key']);
+        $this->assertEquals('Something happened', $extra['message']);
+    }
+
+    public function testWithLogFlushesLog()
+    {
+        $this->setupInfluxDB();
+
+        $log = Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $log->shouldReceive('log')
+            ->once()
+            ->with('info', 'Something happened', Mockery::on(function ($context) {
+                return $context['event'] === 'my_metric'
+                    && $context['key'] === 'value'
+                    && $context['message'] === 'Something happened';
+            }));
+
+        app()->instance('log', $log);
+
+        Metrics::create("my_metric")
+            ->withLog("Something happened")
+            ->setExtra(['key' => 'value']);
+
+        Metrics::flush();
+    }
+
     public function testGivenTimestampIsntChanged()
     {
         $metric = new Metric('my_metric', 1);
