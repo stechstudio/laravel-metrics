@@ -53,7 +53,7 @@ class PostHog extends AbstractDriver
     public function getUserId(): mixed
     {
         if ($this->userIdResolver) {
-            return call_user_func($this->userIdResolver);
+            return call_user_func($this->userIdResolver, $this);
         }
 
         return $this->distinctPrefix . parent::getUserId();

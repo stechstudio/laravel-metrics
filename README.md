@@ -286,14 +286,18 @@ This is used by the PostHog driver as the `distinctId`, and is available to any 
 
 ### Custom user ID resolver
 
-You can override the default resolution by providing your own closure:
+You can override the default resolution by providing your own closure. The driver instance is passed to your closure, so you can fall back to the built-in anonymous ID if needed:
 
 ```php
-Metrics::resolveUserIdWith(fn() => auth()->id());
+Metrics::resolveUserIdUsing(function($driver) {
+    return auth()->check()
+        ? 'custom-prefix:' . auth()->id()
+        : $driver->getAnonymousId();
+});
 ```
 
 This will apply to all drivers. You can also set it on a specific driver:
 
 ```php
-Metrics::driver('posthog')->resolveUserIdWith(fn() => $team->id);
+Metrics::driver('posthog')->resolveUserIdUsing(fn() => $team->id);
 ```

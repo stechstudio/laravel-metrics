@@ -20,7 +20,7 @@ class MetricsManager extends Manager
 
     protected ?\Closure $userIdResolver = null;
 
-    public function resolveUserIdWith(\Closure $resolver): static
+    public function resolveUserIdUsing(\Closure $resolver): static
     {
         $this->userIdResolver = $resolver;
 
@@ -46,7 +46,7 @@ class MetricsManager extends Manager
         $driver = parent::createDriver($driver);
 
         if($this->userIdResolver) {
-            $driver->resolveUserIdWith($this->userIdResolver);
+            $driver->resolveUserIdUsing($this->userIdResolver);
         }
 
         if($this->driverCreatedCallback) {

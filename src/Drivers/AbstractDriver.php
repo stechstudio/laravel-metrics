@@ -66,7 +66,7 @@ abstract class AbstractDriver
 
     protected ?\Closure $userIdResolver = null;
 
-    public function resolveUserIdWith(\Closure $resolver): static
+    public function resolveUserIdUsing(\Closure $resolver): static
     {
         $this->userIdResolver = $resolver;
 
@@ -76,16 +76,21 @@ abstract class AbstractDriver
     public function getUserId(): mixed
     {
         if ($this->userIdResolver) {
-            return call_user_func($this->userIdResolver);
+            return call_user_func($this->userIdResolver, $this);
         }
-
-        static $anonymousId = null;
 
         return match(true) {
             auth()->check() => auth()->id(),
             session()->isStarted() => sha1(session()->getId()),
-            default => $anonymousId ??= Str::random()
+            default => $this->getAnonymousId()
         };
+    }
+
+    public function getAnonymousId(): string
+    {
+        static $anonymousId = null;
+
+        return $anonymousId ??= Str::random();
     }
 
     /**

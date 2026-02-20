@@ -53,7 +53,7 @@ class PostHogDriverTest extends TestCase
 
         $callCount = 0;
         $driver = app(PostHog::class);
-        $driver->resolveUserIdWith(function () use (&$callCount) {
+        $driver->resolveUserIdUsing(function () use (&$callCount) {
             $callCount++;
             return 'user_' . $callCount;
         });
@@ -73,7 +73,7 @@ class PostHogDriverTest extends TestCase
         $this->setupPostHog();
 
         $driver = app(PostHog::class);
-        $driver->resolveUserIdWith(fn() => 'custom-user-42');
+        $driver->resolveUserIdUsing(fn() => 'custom-user-42');
 
         $metric = new \STS\Metrics\Metric("file_uploaded");
         $formatted = $driver->format($metric);
@@ -102,10 +102,23 @@ class PostHogDriverTest extends TestCase
         $this->assertStringStartsWith('user:', $formatted['distinctId']);
     }
 
+    public function testCustomResolverReceivesDriverAndCanFallBack()
+    {
+        $driver = new PostHog();
+        $driver->resolveUserIdUsing(fn($driver) => $driver->getAnonymousId());
+
+        $metric = new \STS\Metrics\Metric("test");
+        $formatted1 = $driver->format($metric);
+        $formatted2 = $driver->format($metric);
+
+        $this->assertNotEmpty($formatted1['distinctId']);
+        $this->assertEquals($formatted1['distinctId'], $formatted2['distinctId']);
+    }
+
     public function testDistinctPrefixSkippedWithCustomResolver()
     {
         $driver = new PostHog('user:');
-        $driver->resolveUserIdWith(fn() => '42');
+        $driver->resolveUserIdUsing(fn() => '42');
 
         $metric = new \STS\Metrics\Metric("test");
         $formatted = $driver->format($metric);
