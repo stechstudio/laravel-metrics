@@ -279,7 +279,7 @@ The closure will be called fresh each time a metric is formatted. This also work
 Drivers automatically resolve the current user ID via `getUserId()`:
 
 1. If a user is authenticated: `auth()->id()`
-2. Otherwise: `getAnonymousId()`, which returns a hashed session ID if a session is active, or a random string (stable for the lifetime of the process)
+2. Otherwise: `getAnonymousId()`, which returns a UUID stored in the session (stable across requests), or a static UUID for non-session contexts (CLI, queues)
 
 This is used by the PostHog driver as the `distinctId`, and is available to any driver via `$driver->getUserId()`.
 

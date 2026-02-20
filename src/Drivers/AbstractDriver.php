@@ -87,12 +87,12 @@ abstract class AbstractDriver
     public function getAnonymousId(): string
     {
         if (session()->isStarted()) {
-            return sha1(session()->getId());
+            return session()->remember('metrics.anonymous_id', fn() => Str::uuid7()->toString());
         }
 
         static $anonymousId = null;
 
-        return $anonymousId ??= Str::random();
+        return $anonymousId ??= Str::uuid7()->toString();
     }
 
     /**
