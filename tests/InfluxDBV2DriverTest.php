@@ -1,5 +1,6 @@
 <?php
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use STS\Metrics\Drivers\InfluxDB;
 
 class InfluxDBV2DriverTest extends TestCase
@@ -25,12 +26,10 @@ class InfluxDBV2DriverTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider nanoSecondTimestampInvalid
-     */
+    #[DataProvider('nanoSecondTimestampInvalid')]
     public function testNanoSecondTimestampInvalid($input)
     {
-        $this->setupInfluxDB();
+        $this->setupInfluxDB2();
 
         $influx = app(InfluxDB::class);
 
@@ -42,12 +41,10 @@ class InfluxDBV2DriverTest extends TestCase
         $this->assertGreaterThanOrEqual($now, $result);
     }
 
-    /**
-     * @dataProvider nanoSecondTimestampValid
-     */
+    #[DataProvider('nanoSecondTimestampValid')]
     public function testNanoSecondTimestamp($expected, $input)
     {
-        $this->setupInfluxDB();
+        $this->setupInfluxDB2();
 
         $influx = app(InfluxDB::class);
 

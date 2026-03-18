@@ -16,29 +16,6 @@ class TestCase extends Orchestra\Testbench\TestCase
         ];
     }
 
-    protected function setupInfluxDB($config = [], $mock = true)
-    {
-        app('config')->set('metrics.default', 'influxdb');
-        app('config')->set('metrics.backends.influxdb', array_merge([
-            'username' => 'foo',
-            'password' => 'bar',
-            'host' => 'localhost',
-            'database' => 'baz',
-            'version'  => 1,
-            'tcp_port' => 8086
-        ], $config));
-
-        if($mock) {
-            $mock = Mockery::mock(\InfluxDB\Database::class, ["db_name", Metrics::getWriteConnection()->getClient()])->makePartial();
-            $mock->shouldReceive('writePoints')
-                ->andReturnUsing(function ($points) {
-                    $GLOBALS['points'] = $points;
-                });
-
-            Metrics::setWriteConnection($mock);
-        }
-    }
-
     protected function setupInfluxDB2($config = [], $mock = true)
     {
         app('config')->set('metrics.default', 'influxdb');
